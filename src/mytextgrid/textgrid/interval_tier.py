@@ -24,12 +24,24 @@ class IntervalTier:
         return self.tier[key]
 
     def insert_boundaries(self, *times):
-        """Insert one or more tier boundaries."""
+        """Insert one or more time boundaries into IntervalTier.
+
+        Parameters
+        ----------
+        *time : float or decimal.Decimal
+            The times (in seconds) of the new boundaries.
+        """
         for time in times:
             self.insert_boundary(time)
 
     def insert_boundary(self, time):
-        """Insert a tier boundary and split intervals."""
+        """Insert a time boundary into IntervalTier.
+
+        Parameters
+        ----------
+        time : float or decimal.Decimal
+            The time (in seconds) of the new boundary.
+        """
         if not isinstance(time, decimal.Decimal):
             time = decimal.Decimal(str(time))
 
@@ -51,7 +63,13 @@ class IntervalTier:
         self.tier.insert(interval_position+1, interval_right)
 
     def remove_boundary(self, time):
-        """Remove a boundary given a time value."""
+        """Remove a time boundary from IntervalTier.
+
+        Parameters
+        ----------
+        time : float or decimal.Decimal
+            The time (in seconds) of an existing boundary.
+        """
         if not isinstance(time, decimal.Decimal):
             time = decimal.Decimal(str(time))
 
@@ -73,7 +91,15 @@ class IntervalTier:
         self.tier.pop(interval_position)
 
     def move_boundary(self, src_time, dst_time):
-        """Move boundary with src_time to dst_time."""
+        """Move the selected boundary to another time.
+
+        Parameters
+        ----------
+        src_time : float or decimal.Decimal
+            The time (in seconds) of an existing boundary.
+        dst_time : float or decimal.Decimal
+            The time (in seconds) where the boundary will be moved to.
+        """
         # Normalize numbers
         if not isinstance(src_time, decimal.Decimal):
             src_time = decimal.Decimal(str(src_time))
@@ -101,18 +127,17 @@ class IntervalTier:
         interval_right.xmin = dst_time
 
     def set_text(self, position, *text_items):
-        """Set the text of a given Interval. When more than one text
-        item is specified, each item is placed next to each other.
-        
+        """Set the text of one or more of intervals.
+
+        If more than one text item is provided, intervals will be set from left to right
+        counting from the starting `position`.
+
         Parameters
         ----------
-        time : float or decimal.Decimal
-            The time in seconds to be evaluated.
-
-        Returns
-        -------
-        int
-            Return the interval position of the specified time.
+        position : int
+            The start position where text items will be inserted in the ``position``.
+        *text_items
+            The text items that will be inserted.
         """
         for position, text in enumerate(text_items, start = position):
             self.tier[position].text = text
