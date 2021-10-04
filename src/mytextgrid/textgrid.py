@@ -1,15 +1,34 @@
-"""Create and manipulate a TextGrid object."""
+"""Create and manipulate TextGrid objects.
+"""
 import decimal
-from .interval_tier import IntervalTier
-from .point_tier import PointTier
+from mytextgrid.interval_tier import IntervalTier
+from mytextgrid.point_tier import PointTier
 decimal.getcontext().prec = 16
 
 def create_textgrid(name, xmin = 0, xmax = 1):
-    """Create an empty TextGrid object"""
+    """Create and return an empty TextGrid.
+
+    By using this function, you will create an empty TextGrid.
+    In order to make this instance useful, add tiers and text content.
+
+    Parameters
+    ----------
+    name : str
+        The name of the TextGrid.
+    xmin : float, default 0
+        The starting time of the TextGrid.
+    xmax : float, default 1
+        The ending time of the TextGrid.
+
+    Returns
+    -------
+        TextGrid
+            A TextGrid instance.
+    """
     return TextGrid(name, xmin, xmax)
 
 class TextGrid:
-    """A class representation for a TextGrid object."""
+    """A class representation for a TextGrid."""
     def __init__(self, name= "", xmin = 0, xmax = 1):
         self.name = name
         self.xmin = decimal.Decimal(str(xmin))
@@ -25,83 +44,82 @@ class TextGrid:
     def __getitem__(self, key):
         return self.tiers[key]
 
-    def struct(self):
-        """"Display compactly the structure of the TextGrid.
+    def describe(self):
+        """Display compactly the structure of TextGrid.
 
-        A TextGrid object contains tiers which also contain intervals or points. By using this
-        method, you can display compactly the structure of the TextGrid.
+        Show tier information: position, type, name and size.
         """
         for index, tier in enumerate(self):
             print(f'{index}\t{tier.class_}\t{tier.name}\t(size = {len(tier)})')
 
     def get_duration(self):
-        """Return the duration of the TextGrid file.
+        """Return time duration in seconds.
 
         Returns
         -------
         float
-            Duration of the TextGrid.
+            Time duration in seconds.
         """
         return self.xmax - self.xmin
 
-    def insert_interval_tier(self, name, tier_position = None):
-        """Insert an interval tier into the TextGrid and return the inserted tier.
+    def insert_interval_tier(self, name, position = None):
+        """Insert an interval tier into TextGrid at specified position.
 
-        Parameters:
+        Parameters
         -----------
         name : str
-            The name of the tier object.
-        tier_position : int, default None, meaning the last position.
-            The position in which the created tier object will be inserted.
+            The name of the inserted tier.
+        position : int, default None, meaning the last position.
+            The position of the inserted tier. Must verify 0 <= position <= len(TextGrid).
 
         Returns:
         --------
-        :class:`~mytextgrid.interval_tier.IntervalTier`
-            An empty tier object.
+        IntervalTier
+            An empty tier.
         """
-        if tier_position is None:
-            tier_position = len(self)
+        if position is None:
+            position = len(self)
 
-        self._eval_tier_position(tier_position)
+        self._eval_tier_position(position)
         self._eval_tiername(name)
 
         interval_tier = IntervalTier(name, self.xmin, self.xmax)
-        self.tiers.insert(tier_position, interval_tier)
-        return self[tier_position]
+        self.tiers.insert(position, interval_tier)
+        return self[position]
 
-    def insert_point_tier(self, name, tier_position = None):
-        """Insert a point tier into the TextGrid and return the inserted tier.
+    def insert_point_tier(self, name, position = None):
+        """Insert a point tier into TextGrid at specified position.
 
-        Parameters:
+        Parameters
         -----------
         name : str
-            The name of the tier object.
-        tier_position : int, default None, meaning the last position.
-            The position in which the created tier object will be inserted.
+            The name of the inserted tier.
+        position : int, default None, meaning the last position.
+            The position of the inserted tier. Must verify 0 <= position <= len(TextGrid).
 
         Returns:
         --------
-        :class:`~mytextgrid.interval_tier.PointTier`
-            An empty tier object.
+        PointTier
+            An empty tier.
         """
-        if tier_position is None:
-            tier_position = len(self)
+        if position is None:
+            position = len(self)
 
-        self._eval_tier_position(tier_position)
+        self._eval_tier_position(position)
         self._eval_tiername(name)
 
         point_tier = PointTier(name, self.xmin, self.xmax)
-        self.tiers.insert(tier_position, point_tier)
-        return self[tier_position]
+        self.tiers.insert(position, point_tier)
+        return self[position]
 
     def insert_boundaries(self, tier, *times):
-        """Insert one or more time boundaries into the selected interval tier.
+        """Search for an interval tier and insert one or more boundaries at the specified times.
 
         Parameters
         ----------
         tier : int or str
-            A position or name of a tier stored in the TextGrid.
-        time : float or :class:`decimal.Decimal`
+            A position or name of a tier stored in TextGrid.
+        *times : iterable
             The time at which a boundary will be inserted in the selected tier.
         """
         tier_obj = self.get_tier(tier)
@@ -115,9 +133,7 @@ class TextGrid:
         tier_obj.insert_boundaries(*times)
 
     def insert_point(self, tier, time, text = ""):
-        """Insert a time boundary and a text into the selected point tier.
-
-        Insert a :class:`point_tier.Point` in the selected ``tier``.
+        """Search for a point tier and insert a point at the specified time.
 
         Parameters
         ----------
@@ -139,10 +155,10 @@ class TextGrid:
         tier_obj.insert_point(time, text)
 
     def set_interval_text(self, tier, interval_position, *text_items):
-        """Set the text of one or more intervals.
+        """Search for an interval tier and set the text of one or more of its intervals.
 
-        Set one or more contiguous text intervals from left to right
-        given a tier and the starting interval position.
+        If more than one text item is provided, intervals will be set from left to right
+        counting from the starting `interval_position`.
 
         Parameters
         ----------
@@ -160,7 +176,7 @@ class TextGrid:
         tier_obj.set_text(interval_position, text_items)
 
     def remove_tier(self, tier):
-        """Remove a tier object stored in the TextGrid.
+        """Search for the specified tier and remove it from TextGrid.
 
         Parameters
         ----------
@@ -173,7 +189,7 @@ class TextGrid:
                 self.tiers.pop(index)
 
     def get_tier(self, tier):
-        """Return a tier object.
+        """Search for the specified tier and return it from TextGrid.
 
         By using this method, you will get access to a tier stored
         within the TextGrid by its position or name. In the case
@@ -187,7 +203,7 @@ class TextGrid:
 
         Returns
         -------
-        :class:`~mytextgrid.interval_tier` or ~class:`~mytextgrid.point_tier`
+        IntervalTier or PointTier
             An interval or point tier stored in the TextGrid.
         """
         if isinstance(tier, int):
@@ -212,12 +228,11 @@ class TextGrid:
         return self[tier_position]
 
     def save_as_table(self, path, delimiter = '\t'):
-        """Convert and save a TextGrid object as a delimited text file.
+        """Convert TextGrid to a delimiter-separated values write it a file.
 
-        By using this method, the :class:`~textgrid.TextGrid` is converted to a table where
-        non-empty items (:class:`~interval_tier.Interval` and :class:`~point_tier.Point`)
-        become rows. Each item (row) is stored along with the tier it belongs to and its
-        timestamps. When the table is done, the items (rows) are sorted by time in ascending
+        By using this method, `TextGrid` is converted to a table where non-empty items (`Interval`
+        and `Point`) become rows. Each item (row) is stored along with the tier it belongs to and
+        its timestamps. When the table is done, the items (rows) are sorted by time in ascending
         order. Finally, the table is exported as a delimited text file.
 
         Parameters
@@ -244,7 +259,7 @@ class TextGrid:
                 file.write(str_line + '\n')
 
     def save_as_text_file(self, path):
-        """Save a TextGrid object as a text file.
+        """Write TextGrid to a text file.
 
         Parameters
         ----------
@@ -284,13 +299,15 @@ class TextGrid:
                         file.write(f'            number = {item.time} \n')
                         file.write(f'            mark = "{item.text}" \n')
 
-    def _eval_tier_position(self, tier_position):
+    @staticmethod
+    def _eval_tier_position(tier_position):
         if isinstance(tier_position, int):
             if tier_position < 0:
                 raise ValueError('Tier position must be a positive integer')
         else:
             raise TypeError('Tier position must be a positive integer')
 
-    def _eval_tiername(self, name):
+    @staticmethod
+    def _eval_tiername(name):
         if " " in name:
             raise SyntaxError('Tier names must not contain white spaces')
