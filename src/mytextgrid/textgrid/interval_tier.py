@@ -4,7 +4,7 @@ from mytextgrid._eval import EvalTimeRange
 decimal.getcontext().prec = 16
 
 class IntervalTier:
-    """A class representation for a tier."""
+    """A class representation for a interval tier."""
 
     def __init__(self, name = '', xmin = 0, xmax = 1):
         self.name = name
@@ -101,23 +101,44 @@ class IntervalTier:
         interval_right.xmin = dst_time
 
     def set_text(self, interval_position, *text_items):
-        """Set the text of a given interval. When more than one text
-         item is specified, each item is placed next to each other."""
+        """Set the text of a given Interval. When more than one text
+        item is specified, each item is placed next to each other.
+        
+        Parameters
+        ----------
+        time : float or decimal.Decimal
+            The time in seconds to be evaluated.
+
+        Returns
+        -------
+        int
+            Return the interval position of the specified time.
+        """
         for position, text in enumerate(text_items, start = interval_position):
             self.tier[position].text = text
 
     def get_interval_at_time(self, time):
-        """Return the interval position given a time value."""
+        """Search the IntervalTier for an interval position at the specified time.
+
+        Parameters
+        ----------
+        time : float or decimal.Decimal
+            The time in seconds to be evaluated.
+
+        Returns
+        -------
+        int
+            Return the interval position of the specified time.
+        """
         self.eval_time_range.check_time(time)
         if not isinstance(time, decimal.Decimal):
             time = decimal.Decimal(str(time))
         for index_, interval in enumerate(self):
             if interval.is_in_range(time):
                 return index_
-        return None
 
 class Interval:
-    """A class representation for an interval object."""
+    """A class representation for an interval."""
 
     def __init__(self, xmin, xmax, text = ""):
         self.class_ = 'Interval'
@@ -126,22 +147,55 @@ class Interval:
         self.text = text
 
     def is_in_range(self, time):
-        """"Return True if the given time is between the interval boundaries.
-         That is: xmin >= x < xmax."""
+        """Evaluate if the specified time is between the interval boundaries.
+
+        Parameters
+        ----------
+        time : float or decimal.Decimal
+            The time in seconds to be evaluated.
+
+        Returns
+        -------
+        bool
+            True is the specified tier is Interval range, that is (xmin >= time < xmax).
+            Otherwise, False.
+        """
         time = decimal.Decimal(str(time))
         if self.xmin <= time < self.xmax:
             return True
         return False
 
     def is_left_boundary(self, time):
-        """Return True if the time value is equal to the left boundary time"""
+        """Evaluate if the specified time is equal to the left boundary time.
+
+        Parameters
+        ----------
+        time : float or decimal.Decimal
+            The time in seconds to be evaluated.
+
+        Returns
+        -------
+        bool
+            True is the specified tier is equal to the left boundary. Otherwise, False.
+        """
         time = decimal.Decimal(str(time))
         if self.xmin == time:
             return True
         return False
 
     def is_right_boundary(self, time):
-        """Return True if the time value is equal to the right boundary time"""
+        """Evaluate if the specified time is equal to the right boundary time.
+
+        Parameters
+        ----------
+        time : float or decimal.Decimal
+            The time in seconds to be evaluated.
+
+        Returns
+        -------
+        bool
+            True is the specified tier is equal to the right boundary. Otherwise, False.
+        """
         time = decimal.Decimal(str(time))
         if self.xmax == time:
             return True
