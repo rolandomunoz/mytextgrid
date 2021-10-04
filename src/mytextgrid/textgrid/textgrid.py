@@ -66,14 +66,14 @@ class TextGrid:
         """Insert an interval tier into TextGrid at specified position.
 
         Parameters
-        -----------
+        ----------
         name : str
             The name of the inserted tier.
         position : int, default None, meaning the last position.
             The position of the inserted tier. Must verify 0 <= position <= len(TextGrid).
 
-        Returns:
-        --------
+        Returns
+        -------
         IntervalTier
             An empty tier.
         """
@@ -91,14 +91,14 @@ class TextGrid:
         """Insert a point tier into TextGrid at specified position.
 
         Parameters
-        -----------
+        ----------
         name : str
             The name of the inserted tier.
         position : int, default None, meaning the last position.
             The position of the inserted tier. Must verify 0 <= position <= len(TextGrid).
 
-        Returns:
-        --------
+        Returns
+        -------
         PointTier
             An empty tier.
         """
