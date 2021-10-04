@@ -3,7 +3,7 @@ import decimal
 import os
 import chardet
 decimal.getcontext().prec = 16
-from ..textgrid import TextGrid as TextGridBuilder
+from mytextgrid.textgrid.textgrid import TextGrid as TextGridBuilder
 
 def read_from_file(path):
   """Read a TextGrid file and return a TextGrid object"""
