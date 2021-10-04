@@ -1,3 +1,4 @@
+import decimal
 class EvalTextGrid:
     pass
 
