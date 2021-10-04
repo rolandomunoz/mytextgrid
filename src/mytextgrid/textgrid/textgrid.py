@@ -1,8 +1,8 @@
 """Create and manipulate TextGrid objects.
 """
 import decimal
-from mytextgrid.interval_tier import IntervalTier
-from mytextgrid.point_tier import PointTier
+from mytextgrid.textgrid.interval_tier import IntervalTier
+from mytextgrid.textgrid.point_tier import PointTier
 decimal.getcontext().prec = 16
 
 def create_textgrid(name, xmin = 0, xmax = 1):
