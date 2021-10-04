@@ -1,9 +1,9 @@
-"""Create and manipulate interval and interval tier objects."""
+"""Create and manipulate `Interval` and `IntervalTier` objects."""
 import decimal
 decimal.getcontext().prec = 16
 
 class IntervalTier:
-    """A class representation for a tier object."""
+    """A class representation for a tier."""
 
     def __init__(self, name = '', xmin = 0, xmax = 1):
         self.name = name
