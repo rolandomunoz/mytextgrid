@@ -100,7 +100,7 @@ class IntervalTier:
         interval_left.xmax = dst_time
         interval_right.xmin = dst_time
 
-    def set_text(self, interval_position, *text_items):
+    def set_text(self, position, *text_items):
         """Set the text of a given Interval. When more than one text
         item is specified, each item is placed next to each other.
         
@@ -114,7 +114,7 @@ class IntervalTier:
         int
             Return the interval position of the specified time.
         """
-        for position, text in enumerate(text_items, start = interval_position):
+        for position, text in enumerate(text_items, start = position):
             self.tier[position].text = text
 
     def get_interval_at_time(self, time):
