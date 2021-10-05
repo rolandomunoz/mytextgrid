@@ -1,5 +1,6 @@
 """Create and manipulate point tiers objects"""
 import decimal
+from mytextgrid._eval import EvalTimeRange
 decimal.getcontext().prec = 16
 
 class PointTier:
@@ -11,6 +12,7 @@ class PointTier:
         self.xmin = decimal.Decimal(str(xmin))
         self.xmax = decimal.Decimal(str(xmax))
         self.tier = []
+        self.eval_time_range = EvalTimeRange(self.xmin, self.xmax, level = 1)
 
     def __len__(self):
         return len(self.tier)
@@ -58,18 +60,14 @@ class PointTier:
         """Check if a Point exists in the given time."""
         if not isinstance(time, decimal.Decimal):
             time = decimal.Decimal(str(time))
-        self._checktime_range(time)
+        
+        # Check if out of range
+        self.eval_time_range.check_time(time)
         for point in self:
             if point.time == time:
                 return True
         return False
 
-    def _checktime_range(self, time):
-        if not isinstance(time, decimal.Decimal):
-            time = decimal.Decimal(str(time))
-
-        if self.xmin > time > self.xmax:
-            raise NameError(f'{time} is out of range')
 
 class Point:
     """Represent a Point object which is the minimal unit of a PointTier object"""
