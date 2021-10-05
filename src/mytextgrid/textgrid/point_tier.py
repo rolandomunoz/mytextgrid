@@ -53,11 +53,32 @@ class PointTier:
         return self.tier[point_position].time
 
     def get_label_of_point(self, point_position):
-        """Get the text content of a Point object."""
+        """Return the text content of a Point.
+
+        Parameters
+        ----------
+        position : int
+            The position of the Point in PointTier. It must be 0 <= position < len(PointTier)
+
+        Returns
+        -------
+        str
+            Return the text of the selected Point.
+        """
         return self.tier[point_position].text
 
     def is_point_at_time(self, time):
-        """Check if a Point exists in the given time."""
+        """Evaluate if a Point exists in the specified time.
+
+        Parameters
+        ----------
+        time : float or decimal.Decimal
+            Time in seconds.
+        Returns
+        -------
+        bool
+            Return True if a Point exists in the specified time. Otherwise, return False.
+        """
         if not isinstance(time, decimal.Decimal):
             time = decimal.Decimal(str(time))
         
@@ -67,7 +88,6 @@ class PointTier:
             if point.time == time:
                 return True
         return False
-
 
 class Point:
     """Represent a Point object which is the minimal unit of a PointTier object"""
