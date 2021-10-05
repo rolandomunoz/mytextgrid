@@ -40,19 +40,19 @@ class PointTier:
         for time in times:
             self.insert_point(time)
 
-    def remove_point(self, point_position):
+    def remove_point(self, position):
         """Remove a Point object."""
-        self.tier.pop[point_position]
+        self.tier.pop[position]
 
-    def set_point_text(self, point_position, text):
+    def set_point_text(self, position, text):
         """Set the text content of an existing Point object."""
-        self.tier[point_position].text = text
+        self.tier[position].text = text
 
-    def get_time_of_point(self, point_position):
+    def get_time_of_point(self, position):
         """Get the time of an object by its ordinal position."""
-        return self.tier[point_position].time
+        return self.tier[position].time
 
-    def get_label_of_point(self, point_position):
+    def get_label_of_point(self, position):
         """Return the text content of a Point.
 
         Parameters
@@ -65,7 +65,7 @@ class PointTier:
         str
             Return the text of the selected Point.
         """
-        return self.tier[point_position].text
+        return self.tier[position].text
 
     def is_point_at_time(self, time):
         """Evaluate if a Point exists in the specified time.
