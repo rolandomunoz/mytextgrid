@@ -190,7 +190,7 @@ class TextGrid:
         # Raise an error if not an interval tier
         if not isinstance(tier_obj, IntervalTier):
             raise TypeError(f'Tier {tier} is an interval tier.')
-        tier_obj.set_text(interval_position, text_items)
+        tier_obj.set_text(interval_position, *text_items)
 
     def remove_tier(self, tier):
         """Search for the specified tier and remove it from TextGrid.
