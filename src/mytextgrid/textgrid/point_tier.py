@@ -62,7 +62,7 @@ class PointTier:
         position : int
             The position of the Point in PointTier. It must be 0 <= position < len(PointTier).
         """
-        self.tier.pop[position]
+        self.tier.pop(position)
 
     def set_point_text(self, position, text):
         """Set the text content of an existing Point.
