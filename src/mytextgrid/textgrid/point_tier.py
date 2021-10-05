@@ -24,7 +24,15 @@ class PointTier:
         return self.tier[key]
 
     def insert_point(self, time, text = ''):
-        """Insert a Point object inside PointTier object."""
+        """Insert a Point into PointTier.
+
+        Parameters
+        ----------
+        time : float or decimal.Decimal
+            The time in seconds where the Point will be inserted.
+        text : str
+            The text of the selected Point.
+        """
         if not isinstance(time, decimal.Decimal):
             time = decimal.Decimal(str(time))
 
@@ -36,20 +44,51 @@ class PointTier:
         self.tier.sort(key=lambda x:x.time)
 
     def insert_points(self, *times):
-        """Insert various empty Point objects into a PointTier object."""
+        """Insert various empty points into PointTier.
+
+        Parameters
+        ----------
+        *times : float or decimal.Decimal
+            One or more time items where Point items will be inserted.
+        """
         for time in times:
             self.insert_point(time)
 
     def remove_point(self, position):
-        """Remove a Point object."""
+        """Remove a Point.
+
+        Parameters
+        ----------
+        position : int
+            The position of the Point in PointTier. It must be 0 <= position < len(PointTier).
+        """
         self.tier.pop[position]
 
     def set_point_text(self, position, text):
-        """Set the text content of an existing Point object."""
+        """Set the text content of an existing Point.
+
+        Parameters
+        ----------
+        position : int
+            The position of the Point in PointTier. It must be 0 <= position < len(PointTier).
+        text: str
+            The text of the selected Point.
+        """
         self.tier[position].text = text
 
     def get_time_of_point(self, position):
-        """Get the time of an object by its ordinal position."""
+        """Return the time of a Point.
+
+        Parameters
+        ----------
+        position : int
+            The position of the Point in PointTier. It must be 0 <= position < len(PointTier).
+
+        Returns
+        -------
+        str
+            Return the time of the selected Point.
+        """
         return self.tier[position].time
 
     def get_label_of_point(self, position):
@@ -81,7 +120,7 @@ class PointTier:
         """
         if not isinstance(time, decimal.Decimal):
             time = decimal.Decimal(str(time))
-        
+
         # Check if out of range
         self.eval_time_range.check_time(time)
         for point in self:
