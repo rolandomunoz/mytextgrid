@@ -75,5 +75,6 @@ class Point:
     """Represent a Point object which is the minimal unit of a PointTier object"""
 
     def __init__(self, time, text = ""):
-        self.time = time
+        self.class_ = 'Point'
+        self.time = decimal.Decimal(str(time))
         self.text = text
