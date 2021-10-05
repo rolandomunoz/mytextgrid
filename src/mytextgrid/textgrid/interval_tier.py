@@ -139,8 +139,8 @@ class IntervalTier:
         *text_items
             The text items that will be inserted.
         """
-        for position, text in enumerate(text_items, start = position):
-            self.tier[position].text = text
+        for tier_position, text in enumerate(text_items, start = position):
+            self.tier[tier_position].text = text
 
     def get_interval_at_time(self, time):
         """Search the IntervalTier for an interval position at the specified time.
@@ -158,9 +158,10 @@ class IntervalTier:
         self.eval_time_range.check_time(time)
         if not isinstance(time, decimal.Decimal):
             time = decimal.Decimal(str(time))
-        for index_, interval in enumerate(self):
+        for position, interval in enumerate(self):
             if interval.is_in_range(time):
-                return index_
+                return position
+        return None
 
 class Interval:
     """A class representation for an interval."""
