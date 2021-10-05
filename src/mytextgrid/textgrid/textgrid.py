@@ -62,6 +62,39 @@ class TextGrid:
         """
         return self.xmax - self.xmin
 
+    def insert_tier(self, name, class_ = 'interval', position = None):
+        """Insert an interval tier into TextGrid at specified position.
+
+        Parameters
+        ----------
+        name : str
+            The name of the inserted tier.
+        class_ : {'interval', 'point'}
+            The class of the inserted tier.
+        position : int, default None, meaning the last position.
+            The position of the inserted tier. Must verify 0 <= position <= len(TextGrid).
+
+        Returns
+        -------
+        IntervalTier
+            An empty tier.
+        """
+        if position is None:
+            position = len(self)
+
+        self._eval_tier_position(position)
+        self._eval_tiername(name)
+
+        if class_ == 'interval':
+            tier = IntervalTier(name, self.xmin, self.xmax)
+        elif class_ == 'point':
+            tier = PointTier(name, self.xmin, self.xmax)
+        else:
+            raise ValueError(f'class {class_} must be interval or point.')
+        self.tiers.insert(position, tier)
+
+        return self[position]
+
     def insert_interval_tier(self, name, position = None):
         """Insert an interval tier into TextGrid at specified position.
 
@@ -77,15 +110,7 @@ class TextGrid:
         IntervalTier
             An empty tier.
         """
-        if position is None:
-            position = len(self)
-
-        self._eval_tier_position(position)
-        self._eval_tiername(name)
-
-        interval_tier = IntervalTier(name, self.xmin, self.xmax)
-        self.tiers.insert(position, interval_tier)
-        return self[position]
+        self.insert_tier(name, 'interval', position)
 
     def insert_point_tier(self, name, position = None):
         """Insert a point tier into TextGrid at specified position.
@@ -102,15 +127,7 @@ class TextGrid:
         PointTier
             An empty tier.
         """
-        if position is None:
-            position = len(self)
-
-        self._eval_tier_position(position)
-        self._eval_tiername(name)
-
-        point_tier = PointTier(name, self.xmin, self.xmax)
-        self.tiers.insert(position, point_tier)
-        return self[position]
+        self.insert_tier(name, 'point', position)
 
     def insert_boundaries(self, tier, *times):
         """Search for an interval tier and insert one or more boundaries at the specified times.
