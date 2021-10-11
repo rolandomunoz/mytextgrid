@@ -1,8 +1,10 @@
 """Create and manipulate TextGrid objects.
 """
 import decimal
+import mytextgrid.textgrid.export as export
 from mytextgrid.textgrid.interval_tier import IntervalTier
 from mytextgrid.textgrid.point_tier import PointTier
+
 decimal.getcontext().prec = 16
 
 def create_textgrid(name, xmin = 0, xmax = 1):
@@ -244,77 +246,32 @@ class TextGrid:
             'exceeds the number of tiers {len(self)}')
         return self[tier_position]
 
-    def save_as_table(self, path, delimiter = '\t'):
-        """Convert TextGrid to a delimiter-separated values write it a file.
-
-        By using this method, `TextGrid` is converted to a table where non-empty items (`Interval`
-        and `Point`) become rows. Each item (row) is stored along with the tier it belongs to and
-        its timestamps. When the table is done, the items (rows) are sorted by time in ascending
-        order. Finally, the table is exported as a delimited text file.
-
-        Parameters
-        ----------
-        path : str
-            The path where the delimited text file will be created.
-        delimiter : str, default '\t', tab character
-            Any character use to separate values.
-        """
-        table = []
-        for tier in self:
-            for item in tier:
-                if item.text == '':
-                    continue
-                if isinstance(tier, IntervalTier):
-                    table.append([item.xmin, tier.name, item.text, item.xmax])
-                else:
-                    table.append([item.time, tier.name, item.text, item.time])
-
-        table.sort(key=lambda x:x[0])
-        with open(path, 'w', encoding = 'utf8') as file:
-            for row in table:
-                str_line = delimiter.join([str(item) for item in row])
-                file.write(str_line + '\n')
-
-    def save_as_text_file(self, path):
+    def to_textgrid(self, path, encoding = 'utf-8'):
         """Write TextGrid to a text file.
 
         Parameters
         ----------
         path : str
             The path where the TextGrid file will be created.
+        encoding : str, default utf-8
+            The encoding of the resulting file.
         """
-        tg_header = ['File type = "ooTextFile"',
-            'Object class = "TextGrid"\n',
-            f'xmin = {self.xmin} ',
-            f'xmax = {self.xmax} ',
-            'tiers? <exists> ',
-            f'size = {len(self)} ',
-            'item []: ']
+        export.to_textgrid(self, path, encoding)
 
-        with open(path, 'w', encoding = 'utf-8') as file:
-            for line in tg_header:
-                file.write(line + '\n')
+    def to_csv(self, path, encoding = 'utf-8'):
+        """Convert TextGrid to a csv file.
 
-            for tier_position, tier in enumerate(self, start = 1):
-                file.write(f'    item [{tier_position}]:\n'.format())
-                file.write(f'        class = "{tier.class_}" \n')
-                file.write(f'        name = "{tier.name}" \n')
-                file.write(f'        xmin = {tier.xmin} \n')
-                file.write(f'        xmax = {tier.xmax} \n')
-                class_ = 'intervals' if tier.class_ == 'IntervalTier' else 'points'
-                file.write(f'        {class_}: size = {len(tier)} \n')
+        Parameters
+        ----------
+        path : str
+            The path where the delimited text file will be created.
+        encoding : str, default utf-8
+            The encoding of the resulting file.
+        """
+        export.to_csv(self, path, encoding)
 
-                if isinstance(tier, IntervalTier):
-                    for item_position, item in enumerate(tier, start = 1):
-                        file.write(f'        intervals [{item_position}]:\n')
-                        file.write(f'            xmin = {item.xmin} \n')
-                        file.write(f'            xmax = {item.xmax} \n')
-                        file.write(f'            text = "{item.text}" \n')
-                else:
-                    for item_position, item in enumerate(tier, start = 1):
-                        file.write(f'        points [{item_position}]:\n')
-                        file.write(f'            number = {item.time} \n')
-                        file.write(f'            mark = "{item.text}" \n')
+    def to_json(self, path):
+        export.to_json(self, path)
 
     @staticmethod
     def _eval_tier_position(tier_position):
