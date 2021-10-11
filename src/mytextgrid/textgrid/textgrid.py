@@ -110,7 +110,7 @@ class TextGrid:
         IntervalTier
             An empty tier.
         """
-        self.insert_tier(name, 'interval', position)
+        return self.insert_tier(name, 'interval', position)
 
     def insert_point_tier(self, name, position = None):
         """Insert a point tier into TextGrid at specified position.
@@ -127,7 +127,7 @@ class TextGrid:
         PointTier
             An empty tier.
         """
-        self.insert_tier(name, 'point', position)
+        return self.insert_tier(name, 'point', position)
 
     def insert_boundaries(self, tier, *times):
         """Search for an interval tier and insert one or more boundaries at the specified times.
