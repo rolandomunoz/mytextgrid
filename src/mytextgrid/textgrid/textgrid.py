@@ -1,7 +1,7 @@
 """Create and manipulate TextGrid objects.
 """
 import decimal
-import mytextgrid.textgrid.export as export
+from mytextgrid.textgrid import export
 from mytextgrid.textgrid.interval_tier import IntervalTier
 from mytextgrid.textgrid.point_tier import PointTier
 
