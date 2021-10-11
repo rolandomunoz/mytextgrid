@@ -85,15 +85,15 @@ for tier in tg:
 You can write a `TextGrid` to different types of files.
 
 ```
-# Write to TextGrid
-path = r'C:\Users\user\Documents\\sentence1.TextGrid'
+# Write to a TextGrid file
+path = r'C:\Users\user\Documents\sentence1.TextGrid'
 tg.to_textgrid(path)
 
-# Write to CSV
+# Write to a CSV file
 csv_path = r'C:\Users\user\Documents\sentence1.csv'
 tg.to_csv(csv_path)
 
-# Write to JSON
+# Write to a JSON file
 csv_path = r'C:\Users\user\Documents\sentence1.json'
 tg.to_json(csv_path)
 ```
