@@ -80,10 +80,22 @@ for tier in tg:
             print(point.text)
 ```
 
-## Saving a TextGrid file
+## Writing TextGrid
+
+You can write a `TextGrid` to different types of files.
+
 ```
-# Save TextGrid
-tg.save_as_text_file(r'C:\Users\rolan\Documents\projects\sentence1.TextGrid')
+# Write to TextGrid
+path = r'C:\Users\user\Documents\\sentence1.TextGrid'
+tg.to_textgrid(path)
+
+# Write to CSV
+csv_path = r'C:\Users\user\Documents\sentence1.csv'
+tg.to_csv(csv_path)
+
+# Write to JSON
+csv_path = r'C:\Users\user\Documents\sentence1.json'
+tg.to_json(csv_path)
 ```
 
 ## Creating a TextGrid from scratch
