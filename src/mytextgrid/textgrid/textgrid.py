@@ -271,6 +271,17 @@ class TextGrid:
         export.to_csv(self, path, encoding)
 
     def to_json(self, path):
+        """Write TextGrid to a json file.
+
+        Parameters
+        ----------
+        textgrid_obj : TextGrid
+            Data stored in a TextGrid.
+        path : str
+            The path where the delimited text file will be created.
+        encoding : str, default utf-8
+            The encoding of the resulting file
+        """
         export.to_json(self, path)
 
     @staticmethod
