@@ -52,14 +52,15 @@ class TextGrid:
         Show tier information: position, type, name and size.
         """
         size = len(self)
-        print('TextGrid: \n'
+        print(
+            'TextGrid: \n'
             f'Name:     {self.name}\n'
             f'Start:    {self.xmin} seconds\n'
             f'End:      {self.xmax} seconds\n'
             f'Duration: {self.xmax - self.xmin} seconds'
             f'Size:     {size}\n'
             f'{"" if size == 0 else "Summary:"}\n'
-)
+            )
 
         for index, tier in enumerate(self):
             tier_class = 'IntervalTier' if tier.is_interval else 'TextTier'
