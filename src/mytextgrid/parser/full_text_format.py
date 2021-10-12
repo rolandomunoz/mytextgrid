@@ -17,7 +17,6 @@ class FullTextParser:
     """
     This class implements methods for parsing TextGrid in full text format.
     """
-
     def __init__(self):
         self._pattern_dict = {
         'file_type': re.compile('File type = "(?P<file_type>.+)"'),
