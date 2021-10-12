@@ -27,21 +27,27 @@ def to_textgrid(textgrid_obj, path, encoding = 'utf-8'):
             file.write(line + '\n')
 
         for tier_position, tier in enumerate(textgrid_obj, start = 1):
+            if tier.is_interval():
+                tier_class, items_name = ('IntervalTier', 'intervals')
+            else:
+                tier_class, items_name = ('TextTier', 'points')
+
             file.write(f'    item [{tier_position}]:\n'.format())
-            file.write(f'        class = "{tier.class_}" \n')
+            file.write(f'        class = "{tier_class}" \n')
             file.write(f'        name = "{tier.name}" \n')
             file.write(f'        xmin = {tier.xmin} \n')
             file.write(f'        xmax = {tier.xmax} \n')
-            tier_class = 'intervals' if tier.class_ == 'IntervalTier' else 'points'
-            file.write(f'        {tier_class}: size = {len(tier)} \n')
+            file.write(f'        {items_name}: size = {len(tier)} \n')
 
-            if tier.class_ == 'IntervalTier':
+            if tier.is_interval():
+                # IntervalTier class
                 for item_position, item in enumerate(tier, start = 1):
                     file.write(f'        intervals [{item_position}]:\n')
                     file.write(f'            xmin = {item.xmin} \n')
                     file.write(f'            xmax = {item.xmax} \n')
                     file.write(f'            text = "{item.text}" \n')
-            elif tier.class_ == 'TextTier':
+            else:
+                # PointTier class
                 for item_position, item in enumerate(tier, start = 1):
                     file.write(f'        points [{item_position}]:\n')
                     file.write(f'            number = {item.time} \n')
@@ -71,9 +77,11 @@ def to_csv(textgrid_obj, path, encoding = 'utf-8'):
         for item in tier:
             if item.text == '':
                 continue
-            if tier.class_ == 'IntervalTier':
+            if tier.is_interval():
+                # IntervalTier class
                 table.append([item.xmin, tier.name, item.text, item.xmax])
             else:
+                # PointTier class
                 table.append([item.time, tier.name, item.text, item.time])
     table.sort(key=lambda x:x[0])
 
@@ -101,16 +109,19 @@ def to_json(textgrid_obj, path, encoding = 'utf-8'):
         'tiers': []
         }
     for tier in textgrid_obj:
+        tier_class = 'IntervalTier' if tier.is_interval() else 'TextTier'
+
         textgrid['tiers'].append(
             {
-            'class':tier.class_,
+            'class':tier_class,
             'name':tier.name,
             'items':[]
             }
             )
 
         for item in tier:
-            if tier.class_ == 'IntervalTier':
+            if tier.is_interval():
+                # If IntervalTier
                 textgrid['tiers'][-1]['items'].append(
                 {
                 'xmin':str(item.xmin),
@@ -119,6 +130,7 @@ def to_json(textgrid_obj, path, encoding = 'utf-8'):
                 }
                 )
             else:
+                # If PointTier
                 textgrid['tiers'][-1]['items'].append(
                 {
                 'number':str(item.time),
