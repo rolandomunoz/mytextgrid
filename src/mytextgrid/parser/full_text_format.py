@@ -34,11 +34,11 @@ class FullTextParser:
         'interval_loc': re.compile(r' {8}intervals [(?P<interval_loc>\d+)]:'),
         'interval_xmin': re.compile(' {12}xmin = (?P<interval_xmin>.+) '),
         'interval_xmax': re.compile(' {12}xmax = (?P<interval_xmax>.+) '),
-        'interval_text': re.compile(' {12}text = "(?P<interval_text>.+)" '),
+        'interval_text': re.compile(' {12}text = "(?P<interval_text>.*)" '),
         'points': re.compile(r' {8}points: size = (?P<points> \d+) '),
         'point_loc': re.compile(r' {8}points [(?P<point_loc>\d+)]:'),
         'point_number': re.compile(' {12}number = (?P<point_number>.+) '),
-        'point_mark': re.compile(' {12}mark = "(?P<point_mark>.+)" ')
+        'point_mark': re.compile(' {12}mark = "(?P<point_mark>.*)" ')
         }
 
     def _parse_line(self, line):
@@ -144,6 +144,7 @@ class FullTextParser:
                     textgrid['tiers'][-1]['items'][-1]['xmax'] = match.group('interval_xmax')
 
                 if key == 'interval_text':
+                    a= match.group('interval_text')
                     textgrid['tiers'][-1]['items'][-1]['text'] = match.group('interval_text')
 
                 if key == 'point_number':
