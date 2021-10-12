@@ -1,27 +1,13 @@
 """Create and manipulate point tiers objects"""
 import decimal
-from mytextgrid._eval import EvalTimeRange
+from mytextgrid.textgrid.tier import Tier
 decimal.getcontext().prec = 16
 
-class PointTier:
+class PointTier(Tier):
     """Represent a tier that contains Point objects."""
 
     def __init__(self, name = '', xmin = 0, xmax = 1):
-        self.name = name
-        self.class_ = 'TextTier'
-        self.xmin = decimal.Decimal(str(xmin))
-        self.xmax = decimal.Decimal(str(xmax))
-        self.tier = []
-        self.eval_time_range = EvalTimeRange(self.xmin, self.xmax, level = 1)
-
-    def __len__(self):
-        return len(self.tier)
-
-    def __iter__(self):
-        return iter(self.tier)
-
-    def __getitem__(self, key):
-        return self.tier[key]
+        super().__init__(name, xmin, xmax, is_interval = False)
 
     def insert_point(self, time, text = ''):
         """Insert a Point into PointTier.
@@ -40,8 +26,8 @@ class PointTier:
             raise ValueError(f'Cannot insert a point at {time}')
 
         point = Point(time, text)
-        self.tier.append(point)
-        self.tier.sort(key=lambda x:x.time)
+        self.items.append(point)
+        self.items.sort(key=lambda x:x.time)
 
     def insert_points(self, *times):
         """Insert various empty points into PointTier.
@@ -62,7 +48,7 @@ class PointTier:
         position : int
             The position of the Point in PointTier. It must be 0 <= position < len(PointTier).
         """
-        self.tier.pop(position)
+        self.items.pop(position)
 
     def set_point_text(self, position, text):
         """Set the text content of an existing Point.
@@ -74,7 +60,7 @@ class PointTier:
         text: str
             The text of the selected Point.
         """
-        self.tier[position].text = text
+        self.items[position].text = text
 
     def get_time_of_point(self, position):
         """Return the time of a Point.
@@ -89,7 +75,7 @@ class PointTier:
         str
             Return the time of the selected Point.
         """
-        return self.tier[position].time
+        return self.items[position].time
 
     def get_label_of_point(self, position):
         """Return the text content of a Point.
@@ -104,7 +90,7 @@ class PointTier:
         str
             Return the text of the selected Point.
         """
-        return self.tier[position].text
+        return self.items[position].text
 
     def is_point_at_time(self, time):
         """Evaluate if a Point exists in the specified time.
@@ -127,30 +113,6 @@ class PointTier:
             if point.time == time:
                 return True
         return False
-
-    @staticmethod
-    def is_interval():
-        """"
-        Return False because it is a IntervalTier.
-
-        Returns
-        ------
-        bool
-            Always False.
-        """
-        return False
-
-    @staticmethod
-    def is_point():
-        """"
-        Return True because it is a PointTier.
-
-        Returns
-        ------
-        bool
-            Always True.
-        """
-        return True
 
 class Point:
     """Represent a Point object which is the minimal unit of a PointTier object"""

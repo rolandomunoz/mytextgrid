@@ -1,27 +1,14 @@
 """Create and manipulate `Interval` and `IntervalTier` objects."""
 import decimal
-from mytextgrid._eval import EvalTimeRange
+from mytextgrid.textgrid.tier import Tier
 decimal.getcontext().prec = 16
 
-class IntervalTier:
+class IntervalTier(Tier):
     """A class representation for a interval tier."""
 
     def __init__(self, name = '', xmin = 0, xmax = 1):
-        self.name = name
-        self.class_ = 'IntervalTier'
-        self.xmin = decimal.Decimal(str(xmin))
-        self.xmax = decimal.Decimal(str(xmax))
-        self.tier = [Interval(self.xmin, self.xmax)]
-        self.eval_time_range = EvalTimeRange(self.xmin, self.xmax, level = 1)
-
-    def __iter__(self):
-        return iter(self.tier)
-
-    def __len__(self):
-        return len(self.tier)
-
-    def __getitem__(self, key):
-        return self.tier[key]
+        super().__init__(name, xmin, xmax, is_interval = True)
+        self.items = [Interval(self.xmin, self.xmax)]
 
     def insert_boundaries(self, *times):
         """Insert one or more time boundaries into IntervalTier.
@@ -48,8 +35,8 @@ class IntervalTier:
         # Check if out of range
         self.eval_time_range.check_time(time)
 
-        interval_position = self.get_interval_at_time(time)
-        interval_left = self.tier[interval_position]
+        loc = self.get_interval_at_time(time)
+        interval_left = self.items[loc]
         if time == interval_left.xmin:
             error_msg = (f'Cannot add a boundary at {time} seconds,'
             'because there is already a boundary there. Boundary not inserted.')
@@ -60,7 +47,7 @@ class IntervalTier:
         interval_left.xmax= time
 
         # Insert interval
-        self.tier.insert(interval_position+1, interval_right)
+        self.items.insert(loc+1, interval_right)
 
     def remove_boundary(self, time):
         """Remove a time boundary from IntervalTier.
@@ -75,20 +62,20 @@ class IntervalTier:
 
         self.eval_time_range.check_time(time)
 
-        interval_position = self.get_interval_at_time(time)
-        interval_left = self.tier[interval_position]
+        loc = self.get_interval_at_time(time)
+        interval_left = self.items[loc]
         if not time == interval_left.xmin:
             error_msg = f'There is no boundary at {time} seconds'
             raise ValueError(error_msg)
 
-        interval_left = self.tier[interval_position-1]
-        interval_right = self.tier[interval_position]
+        interval_left = self.items[loc-1]
+        interval_right = self.items[loc]
 
         interval_left.xmax = interval_right.xmax
         interval_left.text += interval_right.text
 
         # Remove right interval
-        self.tier.pop(interval_position)
+        self.items.pop(loc)
 
     def move_boundary(self, src_time, dst_time):
         """Move the selected boundary to another time.
@@ -113,8 +100,8 @@ class IntervalTier:
 
         position = self.get_interval_at_time(src_time)
 
-        interval_left = self.tier[position-1]
-        interval_right = self.tier[position]
+        interval_left = self.items[position-1]
+        interval_right = self.items[position]
 
         if not interval_right.xmin == src_time:
             raise ValueError(f'There is no boundary at {src_time} seconds')
@@ -139,8 +126,8 @@ class IntervalTier:
         *text_items
             The text items that will be inserted.
         """
-        for tier_position, text in enumerate(text_items, start = position):
-            self.tier[tier_position].text = text
+        for loc, text in enumerate(text_items, start = position):
+            self.items[loc].text = text
 
     def get_interval_at_time(self, time):
         """Search the IntervalTier for an interval position at the specified time.
@@ -162,30 +149,6 @@ class IntervalTier:
             if interval.is_in_range(time):
                 return position
         return None
-
-    @staticmethod
-    def is_interval():
-        """"
-        Return True because it is an IntervalTier
-
-        Returns
-        ------
-        bool
-            Always Trues.
-        """
-        return True
-
-    @staticmethod
-    def is_point():
-        """"
-        Return False because it is not a PointTier
-
-        Returns
-        ------
-        bool
-            Always False.
-        """
-        return False
 
 class Interval:
     """A class representation for an interval."""
