@@ -23,11 +23,11 @@ import mytextgrid
 To read an existing TextGrid file use the `read_from_file()` function. TextGrid files come in [three formats](https://www.fon.hum.uva.nl/praat/manual/TextGrid_file_formats.html): long, short and binary. At this moment, only the long format is supported. 
 
 ```
-import MyTextGrid
+import mytextgrid
 
 # Create an empty TextGrid
 path = r'C:\Users\rolan\Documents\projects\sentence1.TextGrid'
-tg = MyTextGrid.read_from_file(path)
+tg = mytextgrid.read_from_file(path)
 ```
 
 ## Manipulating a TextGrid
@@ -80,7 +80,7 @@ for tier in tg:
             print(point.text)
 ```
 
-## Writing TextGrid
+## Writing TextGrid to a file
 
 You can write a `TextGrid` to different types of files.
 
