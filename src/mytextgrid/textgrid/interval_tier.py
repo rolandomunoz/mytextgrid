@@ -163,6 +163,30 @@ class IntervalTier:
                 return position
         return None
 
+    @staticmethod
+    def is_interval():
+        """"
+        Return True because it is an IntervalTier
+
+        Returns
+        ------
+        bool
+            Always Trues.
+        """
+        return True
+
+    @staticmethod
+    def is_point():
+        """"
+        Return False because it is not a PointTier
+
+        Returns
+        ------
+        bool
+            Always False.
+        """
+        return False
+
 class Interval:
     """A class representation for an interval."""
 

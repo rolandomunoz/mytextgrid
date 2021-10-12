@@ -128,6 +128,30 @@ class PointTier:
                 return True
         return False
 
+    @staticmethod
+    def is_interval():
+        """"
+        Return False because it is a IntervalTier.
+
+        Returns
+        ------
+        bool
+            Always False.
+        """
+        return False
+
+    @staticmethod
+    def is_point():
+        """"
+        Return True because it is a PointTier.
+
+        Returns
+        ------
+        bool
+            Always True.
+        """
+        return True
+
 class Point:
     """Represent a Point object which is the minimal unit of a PointTier object"""
 
