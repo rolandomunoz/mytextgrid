@@ -59,30 +59,29 @@ A TextGrid object is a container that stores one or more Tier objects. Each tier
 ```
 # where tg is a variable that contains a TextGrid object.
 
-# Iterate through a TextGrid 
-ffor tier in tg:
-    print(f'Name : {tier.name}')
-    print(f'Start: {tier.xmin}')
-    print(f'End  : {tier.xmax}')
+# TextGrid info
+print(tg.name)
+print(tg.xmin)
+print(tg.xmax)
+
+# Iterate through a TextGrid
+for tier in tg:
+    print(tier.name)
 
     # Iterate through tiers
     if tier.is_interval():
         # For interval tiers
         for interval in tier:
             # Print Interval attributes
-            print(
-                f'{interval.xmin}\t'
-                f'{interval.xmax}\t'
-                f'{interval.text}'
-                 )
+            print(interval.xmin)
+            print(interval.xmax)
+            print(interval.text)
     else:
         # For point tiers
         for point in tier:
             # Print Point attributes
-            print(
-                f'{point.time}\n'
-                f'{point.text}')
-    print()
+            print(point.time)
+            print(point.text)
 ```
 
 ## Writing TextGrid to a file
