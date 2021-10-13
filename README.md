@@ -39,12 +39,12 @@ tg.insert_interval_tier("word")
 tg.insert_interval_tier("phrase")
 
 # Insert points and intervals
-tg.insert_boundary('segment', 0.23, 0.30, 0.42, 0.62, 0.70, 0.82, 0.90, 0.98)
-tg.insert_boundary('word', 0.23, 0.42, 0.98)
-tg.insert_boundary('phrase', 0.23, 0.98)
+tg.insert_boundaries('segment', 0.23, 0.30, 0.42, 0.62, 0.70, 0.82, 0.98)
+tg.insert_boundaries('word', 0.23, 0.42, 0.98)
+tg.insert_boundaries('phrase', 0.23, 0.98)
 
 tg.insert_point('tone', 0.66, "H")
-tg.insert_point('tone', 0.94, "L")
+tg.insert_point('tone', 0.9, "L")
 
 # Add text to intervals
 tg.set_interval_text('segment', 1, 'e', 'l', 'p', 'e', 'rr', 'o')
@@ -60,24 +60,29 @@ A TextGrid object is a container that stores one or more Tier objects. Each tier
 # where tg is a variable that contains a TextGrid object.
 
 # Iterate through a TextGrid 
-for tier in tg:
-    print(tier.name)
-    print(tier.xmin)
-    print(tier.xmax)
-    print(tier.class_)
-    # Iterate through an interval tier
-    if tier.class_ == 'IntervalTier':
+ffor tier in tg:
+    print(f'Name : {tier.name}')
+    print(f'Start: {tier.xmin}')
+    print(f'End  : {tier.xmax}')
+
+    # Iterate through tiers
+    if tier.is_interval():
+        # For interval tiers
         for interval in tier:
             # Print Interval attributes
-            print(interval.text)
-            print(interval.xmin)
-            print(interval.xmax)
-    # Iterate through an interval tier
-    elif tier.class_ == 'PointTier':
+            print(
+                f'{interval.xmin}\t'
+                f'{interval.xmax}\t'
+                f'{interval.text}'
+                 )
+    else:
+        # For point tiers
         for point in tier:
             # Print Point attributes
-            print(point.time)
-            print(point.text)
+            print(
+                f'{point.time}\n'
+                f'{point.text}')
+    print()
 ```
 
 ## Writing TextGrid to a file
