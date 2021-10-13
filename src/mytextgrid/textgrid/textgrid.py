@@ -47,24 +47,38 @@ class TextGrid:
         return self.tiers[key]
 
     def describe(self):
-        """Display compactly the structure of TextGrid.
+        """Display compactly the attributes and structure of TextGrid.
 
         Show tier information: position, type, name and size.
         """
         size = len(self)
-        print(
-            'TextGrid: \n'
-            f'Name:     {self.name}\n'
-            f'Start:    {self.xmin} seconds\n'
-            f'End:      {self.xmax} seconds\n'
-            f'Duration: {self.xmax - self.xmin} seconds'
-            f'Size:     {size}\n'
-            f'{"" if size == 0 else "Summary:"}\n'
-            )
 
+        summary = []
         for index, tier in enumerate(self):
             tier_class = 'IntervalTier' if tier.is_interval else 'TextTier'
-            print(f'{index}\t{tier_class}\t{tier.name}\t(size = {len(tier)})')
+            summary.append(
+                f'    {index}\t'
+                f'{tier_class}\t'
+                f'{tier.name}\t'
+                f'(size = {len(tier)})'
+                )
+
+        summary_str = ''
+        if size > 0:
+            content = '\n'.join(summary)
+            head = "Tiers summary:"
+            summary_str = f'\n\n{head}\n{content}'
+
+        message = (
+            'TextGrid: \n\n'
+            f'    Name:                  {self.name}\n'
+            f'    Startig time (sec):    {self.xmin}\n'
+            f'    Ending time (sec):     {self.xmax}\n'
+            f'    Number of tiers:       {size}'
+            f'{summary_str}'
+            )
+
+        print(message)
 
     def get_duration(self):
         """Return time duration in seconds.
