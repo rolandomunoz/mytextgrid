@@ -9,7 +9,7 @@ decimal.getcontext().prec = 16
 
 def read_from_file(path, encoding = None):
     """
-    Read a TextGrid file and return a TextGrid object
+    Read a TextGrid file and return a TextGrid object.
 
     Parameters
     ----------

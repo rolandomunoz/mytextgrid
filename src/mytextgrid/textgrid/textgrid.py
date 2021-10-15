@@ -24,7 +24,7 @@ def create_textgrid(name, xmin = 0, xmax = 1):
 
     Returns
     -------
-        TextGrid
+        :class:`mytextgrid.TextGrid`
             A TextGrid instance.
     """
     return TextGrid(name, xmin, xmax)
