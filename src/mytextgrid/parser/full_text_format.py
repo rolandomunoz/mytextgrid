@@ -21,7 +21,7 @@ def read_from_file(path, encoding = None):
 
     Returns
     -------
-        `mytextgrid.TextGrid`
+        :class:`mytextgrid.TextGrid`
             A TextGrid instance.
     """
     parser = FullTextParser()
