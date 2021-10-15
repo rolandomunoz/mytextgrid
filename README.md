@@ -113,4 +113,4 @@ import mytextgrid
 tg = mytextgrid.create_textgrid(name = 'dog', xmin = 0, xmax = 1)
 ```
 
-In the first line, use `import mytextgrid` to import the package. This package gives you access to the function `create_textgrid()` which is used in the fourth line. Use this function to create an empty `TextGrid`. This function takes three arguments: the name, the starting and the ending time of a TextGrid. The object is created and assigned to the variable `tg`.
+Use the function `create_textgrid()` to create an empty TextGrid object. In the function, three arguments are required: the name (`name`) of the TextGrid, its starting (`xmin`) and ending(`xmax`) time. The function returns a empty TextGrid object which is assigned to the variable `tg`. Becareful, the resulting object does not contain tiers.
