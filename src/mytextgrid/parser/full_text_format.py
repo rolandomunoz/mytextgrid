@@ -8,8 +8,22 @@ from mytextgrid.textgrid.textgrid import TextGrid
 decimal.getcontext().prec = 16
 
 def read_from_file(path, encoding = None):
-    """Read a TextGrid file and return a TextGrid object"""
+    """
+    Read a TextGrid file and return a TextGrid object
 
+    Parameters
+    ----------
+        path : str
+            The path of the TextGrid file.
+        encoding : str, default None, detect automatically the encoding.
+            The name of the encoding used to decode the file. See the codecs module for the list
+            supported encodings.
+
+    Returns
+    -------
+        `mytextgrid.TextGrid`
+            A TextGrid instance.
+    """
     parser = FullTextParser()
     textgrid_json = parser.full_textgrid_to_json(path, encoding)
     return parser.json_to_textgrid(textgrid_json)
