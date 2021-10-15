@@ -7,10 +7,11 @@ import chardet
 from mytextgrid.textgrid.textgrid import TextGrid
 decimal.getcontext().prec = 16
 
-def read_from_file(path):
+def read_from_file(path, encoding = None):
     """Read a TextGrid file and return a TextGrid object"""
+
     parser = FullTextParser()
-    textgrid_json = parser.full_textgrid_to_json(path)
+    textgrid_json = parser.full_textgrid_to_json(path, encoding)
     return parser.json_to_textgrid(textgrid_json)
 
 class FullTextParser:
