@@ -301,8 +301,6 @@ class TextGrid:
 
         Parameters
         ----------
-        textgrid_obj : TextGrid
-            Data stored in a TextGrid.
         path : str
             The path where the delimited text file will be created.
         encoding : str, default utf-8
