@@ -166,6 +166,21 @@ class TextGrid:
             A position or name of a tier stored in TextGrid.
         *times : iterable
             The time at which a boundary will be inserted in the selected tier.
+
+        Examples
+        --------
+        >>> tg = mytextgrid.create_textgrid('banana', 0, 1)
+        >>> tg.insert_interval_tier('segment')
+
+        With the ``tier`` parameter, we specify the tier in which boundaries will be inserted.
+        Then, we provide the time boundaries in the ``*times`` place.
+
+        >>> tg.insert_boundaries('segment', 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9)
+
+        We can also pass an iterable object in the ``*times`` parameter.
+
+        >>> times = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9]
+        >>> tg.insert_boundaries('segment', *times)
         """
         tier_obj = self.get_tier(tier)
 
