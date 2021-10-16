@@ -4,7 +4,7 @@ import os
 import json
 import re
 import chardet
-from mytextgrid.textgrid.textgrid import TextGrid
+from mytextgrid.core.textgrid import TextGrid
 decimal.getcontext().prec = 16
 
 def read_from_file(path, encoding = None):

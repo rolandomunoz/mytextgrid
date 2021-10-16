@@ -1,6 +1,6 @@
 """Create and manipulate `Interval` and `IntervalTier` objects."""
 import decimal
-from mytextgrid.textgrid.tier import Tier
+from mytextgrid.core.tier import Tier
 decimal.getcontext().prec = 16
 
 class IntervalTier(Tier):

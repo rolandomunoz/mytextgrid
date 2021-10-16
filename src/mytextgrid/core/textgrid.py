@@ -1,9 +1,9 @@
 """Create and manipulate TextGrid objects.
 """
 import decimal
-from mytextgrid.textgrid import export
-from mytextgrid.textgrid.interval_tier import IntervalTier
-from mytextgrid.textgrid.point_tier import PointTier
+from mytextgrid.io import export
+from mytextgrid.core.interval_tier import IntervalTier
+from mytextgrid.core.point_tier import PointTier
 
 decimal.getcontext().prec = 16
 
