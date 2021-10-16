@@ -296,7 +296,7 @@ class TextGrid:
         """
         export.to_csv(self, path, encoding)
 
-    def to_json(self, path):
+    def to_json(self, path, encoding = 'utf-8'):
         """Write TextGrid to a json file.
 
         Parameters
@@ -306,7 +306,7 @@ class TextGrid:
         encoding : str, default utf-8
             The encoding of the resulting file
         """
-        export.to_json(self, path)
+        export.to_json(self, path, encoding)
 
     @staticmethod
     def _eval_tier_position(tier_position):
