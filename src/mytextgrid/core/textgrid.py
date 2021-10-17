@@ -50,6 +50,34 @@ class TextGrid:
         """Display compactly the attributes and structure of TextGrid.
 
         Show tier information: position, type, name and size.
+
+        Examples
+        --------
+        First, read or create a :meth:`~mytextgrid.TextGrid`.
+    
+        >>> # Creating TextGrid
+        >>> tg = mytextgrid.create_textgrid('perro', 0, 1)
+        >>> # Inserting tiers
+        >>> tg.insert_point_tier("tone")
+        >>> tg.insert_interval_tier("segment")
+        >>> tg.insert_point('tone', 0.66, "H")
+        >>> # Insert content into the created tiers
+        >>> tg.insert_point('tone', 0.9, "L")
+        >>> tg.insert_boundaries('segment', 0.23, 0.30, 0.42, 0.62, 0.70, 0.82, 0.98)
+        >>> tg.set_interval_text('segment', 1, 'e', 'l', 'p', 'e', 'rr', 'o')
+
+        Once this is done, use :meth:`~mytextgrid.describe`.
+
+        >>> # Describing TextGrid
+        >>> tg.describe()
+        TextGrid:
+            Name:                  perro
+            Startig time (sec):    0
+            Ending time (sec):     1
+            Number of tiers:       2
+        Tiers Summary:
+        0	TextTier	tone	(size = 2)
+        1	IntervalTier	segment	(size = 8)
         """
         size = len(self)
 
@@ -67,10 +95,10 @@ class TextGrid:
         if size > 0:
             content = '\n'.join(summary)
             head = "Tiers summary:"
-            summary_str = f'\n\n{head}\n{content}'
+            summary_str = f'\n{head}\n{content}'
 
         message = (
-            'TextGrid: \n\n'
+            'TextGrid:\n'
             f'    Name:                  {self.name}\n'
             f'    Startig time (sec):    {self.xmin}\n'
             f'    Ending time (sec):     {self.xmax}\n'
@@ -87,6 +115,13 @@ class TextGrid:
         -------
         float
             Time duration in seconds.
+
+        Examples
+        --------
+        >>> tg = mytextgrid.create_textgrid('banana', 0, 1.2)
+        >>> tg.get_duration()
+        1.2
+
         """
         return self.xmax - self.xmin
 
@@ -135,8 +170,14 @@ class TextGrid:
 
         Returns
         -------
-        IntervalTier
+        :class:`~mytextgrid.core.textgrid.IntervalTier`
             An empty tier.
+
+        See Also
+        ---------
+        mytextgrid.TextGrid.insert_boundaries: Insert one or more boundaries.
+        mytextgrid.TextGrid.set_interval_text: Set the text for one or more of intervals.
+
         """
         return self.insert_tier(name, True, position)
 
@@ -166,6 +207,10 @@ class TextGrid:
             A position or name of a tier stored in TextGrid.
         *times : iterable
             The time at which a boundary will be inserted in the selected tier.
+
+        See Also
+        ---------
+        mytextgrid.TextGrid.set_interval_text: Set the text for one or more of intervals
 
         Examples
         --------
@@ -249,7 +294,7 @@ class TextGrid:
                 self.tiers.pop(index)
 
     def get_tier(self, tier):
-        """Search for the specified tier and return it from TextGrid.
+        """Search into the TextGrid for the specified tier and return it.
 
         By using this method, you will get access to a tier stored
         within the TextGrid by its position or name. In the case
@@ -263,8 +308,8 @@ class TextGrid:
 
         Returns
         -------
-        IntervalTier or PointTier
-            An interval or point tier stored in the TextGrid.
+        :class:`~mytextgrid.core.interval_tier.IntervalTier` or :class:`~mytextgrid.core.interval_tier.PointTier`
+            A tier stored in the TextGrid.
         """
         if isinstance(tier, int):
             if tier < 0:
@@ -283,7 +328,7 @@ class TextGrid:
         if tier_position is None:
             raise NameError(f'The specified tier name {tier} does not exist')
         if tier_position > len(self):
-            raise IndexError(f'The specified tier numer {tier_position}'
+            raise IndexError(f'The specified tier number {tier_position}'
             'exceeds the number of tiers {len(self)}')
         return self[tier_position]
 
