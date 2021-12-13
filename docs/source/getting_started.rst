@@ -2,7 +2,7 @@
 Getting started
 ***************
 
-``mytextgrid`` is package written in Python to manipulate TextGrid files. A TextGrid is a type of representation for time-aligned annotations used by `Praat <https://www.fon.hum.uva.nl/praat/>`_ , a software for doing phonetics.
+``mytextgrid`` is a package written in Python to manipulate TextGrid files. A TextGrid is a type of representation for time-aligned annotations used by `Praat <https://www.fon.hum.uva.nl/praat/>`_, a software for doing phonetics.
 
 With ``mytextgrid`` you can read a TextGrid file or just create it from scratch. Once a TextGrid is loaded in Python, you can modify it or query it. In this tutorial I will walk you through the basics of this package.
 
