@@ -6,7 +6,7 @@ MyTextGrid
    :caption: Contents:
 
    getting_started
-   ipa_reference
+   api_reference
 
 
 Indices and tables
