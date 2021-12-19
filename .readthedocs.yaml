@@ -29,7 +29,7 @@ sphinx:
 python:
     install:
       - method: pip
-      path: .
+      path: ./src/mytextgrid
   setup_py_install: true
   install:
   - requirements: docs/requirements.txt
