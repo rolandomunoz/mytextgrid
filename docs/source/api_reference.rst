@@ -1,4 +1,4 @@
-IPA Reference
+API Reference
 =============
 
 Functions
