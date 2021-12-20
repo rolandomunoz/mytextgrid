@@ -25,9 +25,9 @@ After that, you can import the package:
 Basic operations
 ================
 
-A ``TextGrid`` is type of object that represent a time-aligned annotation. They have many uses when working with sound files in Praat. Some people use them to make phonetic transcriptions, others make notes of different kind; other people use annotations to run scripts over some specific parts of a sound file.
+A ``TextGrid`` is type of object that represent a time-aligned annotation. They have many uses when working with sound files in Praat. Some people use them in phonetic transcriptions, others make notes of different kind; other people use annotations to run scripts over some specific parts of a sound file.
 
-Whathever the use, a TextGrid is hierarchical structured. It contains one or more tiers, which at the same time, contain time-aligned marks. These marks can be of ``Interval`` type if they start and end at some specific time. In the other hand, they are of type ``Point`` if they only refer to a specific point in time. ``Interval`` objects are only stored in tiers of type ``IntervalTier``, whereas ``Point`` objects are stored in ``PointTier`` tiers. A TextGrid can contain one or more tiers, which can also contain intervals or points.
+A TextGrid is hierarchical structured. It contains one or more tiers, which at the same time, contain time-aligned marks. These marks can be of ``Interval`` or ``Point`` type. Marks in intervals have a starting and ending time, while points refer to a specific point in time. Tiers that store ``Interval`` objects are ``IntervalTier``, whereas ``Point`` objects are stored in ``PointTier`` tiers.
 
 Reading a TextGrid file
 -----------------------
@@ -51,8 +51,7 @@ To read a TextGrid file you can use ``mytextgrid.read_from_file()`` function. Th
 Traversing a TextGrid
 ---------------------
 
-We can use the ``for`` statement to visit all the tiers withing a ``TextGrid``. Also, within a tier (``IntervalTier`` or ``PointTier``), we can navigate through its items using another ``for`` statement.
-
+We can use the ``for`` statement to visit all the tiers within a ``TextGrid``.
 .. code-block:: python
    :linenos:
    :lineno-start: 5
@@ -68,6 +67,14 @@ We can use the ``for`` statement to visit all the tiers withing a ``TextGrid``. 
    for tier in tg:
       print(tier.name)
 
+We can also visit elements within a tier in the same way.
+
+.. code-block:: python
+   :linenos:
+   :lineno-start: 5
+
+   # Iterate through a TextGrid
+   for tier in tg:
       # Iterate through tiers
       if tier.is_interval():
          # For interval tiers
@@ -105,7 +112,7 @@ In the function, we need to specify the name (``name``) of the TextGrid, also it
 Manipulating a TextGrid
 -----------------------
 
-Once you have created a TextGrid from scratch, you can insert content to it.
+Now that you have created an empty TextGrid, let's insert some tiers and add text.
 
 .. code-block:: python
    :caption: Manipulating a TextGrid
@@ -134,7 +141,7 @@ Once you have created a TextGrid from scratch, you can insert content to it.
 Writing TextGrid to a file
 --------------------------
 
-You can write a ``TextGrid`` object to different types of files.
+You can save a ``TextGrid`` object as a text file. For that, you can choose between three types of formats: `TextGrid`, `json` or a `csv` table.
 
 .. code-block:: python
    :caption: Write to a TextGrid file
