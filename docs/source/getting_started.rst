@@ -52,6 +52,7 @@ Traversing a TextGrid
 ---------------------
 
 We can use the ``for`` statement to visit all the tiers within a ``TextGrid``.
+
 .. code-block:: python
    :linenos:
    :lineno-start: 5
