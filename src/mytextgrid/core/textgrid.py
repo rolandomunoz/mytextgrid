@@ -113,7 +113,7 @@ class TextGrid:
 
         Returns
         -------
-        float
+        :class:`decimal.Decimal`
             Time duration in seconds.
 
         Examples
