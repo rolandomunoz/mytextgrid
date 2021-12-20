@@ -1,6 +1,8 @@
 # Python package: mytextgrid
 A tiny python project for creating, reading, writing and querying Praat annotation files (TextGrid).
 
+The following tutorial will walk you through the basics. For more information, visit the [documentation website](https://mytextgrid.readthedocs.io/en/latest/index.html)
+
 ## Getting started
 
 ### 1. Installation
