@@ -11,7 +11,8 @@ class IntervalTier(Tier):
         self.items = [Interval(self.xmin, self.xmax)]
 
     def insert_boundaries(self, *times):
-        """Insert one or more time boundaries into IntervalTier.
+        """
+        Insert one or more time boundaries into IntervalTier.
 
         Parameters
         ----------
@@ -22,7 +23,8 @@ class IntervalTier(Tier):
             self.insert_boundary(time)
 
     def insert_boundary(self, time):
-        """Insert a time boundary into IntervalTier.
+        """
+        Insert a time boundary into IntervalTier.
 
         Parameters
         ----------
@@ -50,7 +52,8 @@ class IntervalTier(Tier):
         self.items.insert(loc+1, interval_right)
 
     def remove_boundary(self, time):
-        """Remove a time boundary from IntervalTier.
+        """
+        Remove a time boundary from IntervalTier.
 
         Parameters
         ----------
@@ -78,7 +81,8 @@ class IntervalTier(Tier):
         self.items.pop(loc)
 
     def move_boundary(self, src_time, dst_time):
-        """Move the selected boundary to another time.
+        """
+        Move the selected boundary to another time.
 
         Parameters
         ----------
@@ -114,7 +118,8 @@ class IntervalTier(Tier):
         interval_right.xmin = dst_time
 
     def set_text(self, position, *text_items):
-        """Set the text of one or more of intervals.
+        """
+        Set the text of one or more of intervals.
 
         If more than one text item is provided, intervals will be set from left to right
         counting from the starting `position`.
@@ -130,7 +135,8 @@ class IntervalTier(Tier):
             self.items[loc].text = text
 
     def get_interval_at_time(self, time):
-        """Search the IntervalTier for an interval position at the specified time.
+        """
+        Search the IntervalTier for an interval position at the specified time.
 
         Parameters
         ----------
@@ -151,7 +157,9 @@ class IntervalTier(Tier):
         return None
 
 class Interval:
-    """A class representation for an interval."""
+    """
+    A class representation for an interval.
+    """
 
     def __init__(self, xmin, xmax, text = ""):
         self.class_ = 'Interval'
@@ -160,7 +168,8 @@ class Interval:
         self.text = text
 
     def is_in_range(self, time):
-        """Evaluate if the specified time is between the interval boundaries.
+        """
+        Evaluate if the specified time is between the interval boundaries.
 
         Parameters
         ----------
@@ -179,7 +188,8 @@ class Interval:
         return False
 
     def is_left_boundary(self, time):
-        """Evaluate if the specified time is equal to the left boundary time.
+        """
+        Evaluate if the specified time is equal to the left boundary time.
 
         Parameters
         ----------
@@ -197,7 +207,8 @@ class Interval:
         return False
 
     def is_right_boundary(self, time):
-        """Evaluate if the specified time is equal to the right boundary time.
+        """
+        Evaluate if the specified time is equal to the right boundary time.
 
         Parameters
         ----------
