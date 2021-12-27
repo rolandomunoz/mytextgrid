@@ -4,7 +4,9 @@ from mytextgrid.core.tier import Tier
 decimal.getcontext().prec = 16
 
 class IntervalTier(Tier):
-    """A class representation for a interval tier."""
+    """
+    A class representation for a interval tier.
+    """
 
     def __init__(self, name = '', xmin = 0, xmax = 1):
         super().__init__(name, xmin, xmax, is_interval = True)
