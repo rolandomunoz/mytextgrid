@@ -8,7 +8,8 @@ from mytextgrid.core.point_tier import PointTier
 decimal.getcontext().prec = 16
 
 def create_textgrid(name, xmin = 0, xmax = 1):
-    """Create and return an empty TextGrid.
+    """
+    Create and return an empty TextGrid.
 
     By using this function, you will create an empty TextGrid.
     In order to make this instance useful, add tiers and text content.
@@ -30,7 +31,9 @@ def create_textgrid(name, xmin = 0, xmax = 1):
     return TextGrid(name, xmin, xmax)
 
 class TextGrid:
-    """A class representation for a TextGrid."""
+    """
+    A class representation for a TextGrid.
+    """
     def __init__(self, name= "", xmin = 0, xmax = 1):
         self.name = name
         self.xmin = decimal.Decimal(str(xmin))
@@ -47,7 +50,8 @@ class TextGrid:
         return self.tiers[key]
 
     def describe(self):
-        """Display compactly the attributes and structure of TextGrid.
+        """
+        Display compactly the attributes and structure of TextGrid.
 
         Show tier information: position, type, name and size.
 
@@ -109,7 +113,8 @@ class TextGrid:
         print(message)
 
     def get_duration(self):
-        """Return time duration in seconds.
+        """
+        Return time duration in seconds.
 
         Returns
         -------
@@ -126,7 +131,8 @@ class TextGrid:
         return self.xmax - self.xmin
 
     def insert_tier(self, name, is_interval = True, position = None):
-        """Insert an interval tier into TextGrid at specified position.
+        """
+        Insert an interval tier into TextGrid at specified position.
 
         Parameters
         ----------
@@ -159,7 +165,8 @@ class TextGrid:
         return self[position]
 
     def insert_interval_tier(self, name, position = None):
-        """Insert an interval tier into TextGrid at specified position.
+        """
+        Insert an interval tier into TextGrid at specified position.
 
         Parameters
         ----------
@@ -177,12 +184,12 @@ class TextGrid:
         ---------
         mytextgrid.TextGrid.insert_boundaries: Insert one or more boundaries.
         mytextgrid.TextGrid.set_interval_text: Set the text for one or more of intervals.
-
         """
         return self.insert_tier(name, True, position)
 
     def insert_point_tier(self, name, position = None):
-        """Insert a point tier into TextGrid at specified position.
+        """
+        Insert a point tier into TextGrid at specified position.
 
         Parameters
         ----------
@@ -199,7 +206,8 @@ class TextGrid:
         return self.insert_tier(name, False, position)
 
     def insert_boundaries(self, tier, *times):
-        """Search for an interval tier and insert one or more boundaries at the specified times.
+        """
+        Search for an interval tier and insert one or more boundaries at the specified times.
 
         Parameters
         ----------
@@ -238,7 +246,8 @@ class TextGrid:
         tier_obj.insert_boundaries(*times)
 
     def insert_point(self, tier, time, text = ""):
-        """Search for a point tier and insert a point at the specified time.
+        """
+        Search for a point tier and insert a point at the specified time.
 
         Parameters
         ----------
@@ -260,7 +269,8 @@ class TextGrid:
         tier_obj.insert_point(time, text)
 
     def set_interval_text(self, tier, interval_position, *text_items):
-        """Search for an interval tier and set the text of one or more of its intervals.
+        """
+        Search for an interval tier and set the text of one or more of its intervals.
 
         If more than one text item is provided, intervals will be set from left to right
         counting from the starting `interval_position`.
@@ -281,7 +291,8 @@ class TextGrid:
         tier_obj.set_text(interval_position, *text_items)
 
     def remove_tier(self, tier):
-        """Search for the specified tier and remove it from TextGrid.
+        """
+        Search for the specified tier and remove it from TextGrid.
 
         Parameters
         ----------
@@ -294,7 +305,8 @@ class TextGrid:
                 self.tiers.pop(index)
 
     def get_tier(self, tier):
-        """Search into the TextGrid for the specified tier and return it.
+        """
+        Search into the TextGrid for the specified tier and return it.
 
         By using this method, you will get access to a tier stored
         within the TextGrid by its position or name. In the case
@@ -333,7 +345,8 @@ class TextGrid:
         return self[tier_position]
 
     def to_textgrid(self, path, encoding = 'utf-8'):
-        """Write TextGrid to a text file.
+        """
+        Write TextGrid to a text file.
 
         Parameters
         ----------
@@ -345,7 +358,8 @@ class TextGrid:
         export.to_textgrid(self, path, encoding)
 
     def to_csv(self, path, encoding = 'utf-8'):
-        """Convert TextGrid to a csv file.
+        """
+        Convert TextGrid to a csv file.
 
         Parameters
         ----------
@@ -357,7 +371,8 @@ class TextGrid:
         export.to_csv(self, path, encoding)
 
     def to_json(self, path, encoding = 'utf-8'):
-        """Write TextGrid to a json file.
+        """
+        Write TextGrid to a json file.
 
         Parameters
         ----------
