@@ -140,6 +140,9 @@ class IntervalTier(Tier):
         """
         Search the IntervalTier for an interval position at the specified time.
 
+        This method matches the interval where the specified time is greater than
+        or equal to its left boundary or less than its right boundary.
+
         Parameters
         ----------
         time : float or decimal.Decimal
@@ -156,6 +159,7 @@ class IntervalTier(Tier):
         for position, interval in enumerate(self):
             if interval.is_in_range(time):
                 return position
+        self.xmin <= time < self.xmax
         return None
 
 class Interval:
