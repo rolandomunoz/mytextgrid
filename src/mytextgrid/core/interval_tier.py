@@ -32,6 +32,11 @@ class IntervalTier(Tier):
         ----------
         time : float or decimal.Decimal
             The time (in seconds) of the new boundary.
+
+        Returns
+        -------
+        tuple of (int, int)
+            The left and right interval position at the inserted boundary.
         """
         if not isinstance(time, decimal.Decimal):
             time = decimal.Decimal(str(time))
@@ -52,6 +57,9 @@ class IntervalTier(Tier):
 
         # Insert interval
         self.items.insert(loc+1, interval_right)
+
+        # Returns
+        return (loc, loc+1)
 
     def remove_boundary(self, time):
         """
