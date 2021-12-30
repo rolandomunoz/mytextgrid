@@ -1,4 +1,5 @@
-"""Create and manipulate TextGrid objects.
+"""
+Create and manipulate TextGrid objects.
 """
 import decimal
 from mytextgrid.io import export
@@ -216,6 +217,11 @@ class TextGrid:
         *times : iterable
             The time at which a boundary will be inserted in the selected tier.
 
+        Raises
+        ------
+        TypeError
+            If the selected tier is not an `IntervalTier` object.
+
         See Also
         ---------
         mytextgrid.TextGrid.set_interval_text: Set the text for one or more of intervals
@@ -257,6 +263,11 @@ class TextGrid:
             The time at which a :class:`~point_tier.Point` item will be inserted in the ``tier``.
         text : str, default ''
             The text content that will be store in the :class:`~point_tier.Point`
+
+        Raises
+        ------
+        TypeError
+            If the selected tier is not an `PointTier` object.
         """
         tier_obj = self.get_tier(tier)
 
@@ -318,6 +329,13 @@ class TextGrid:
         tier : int or str
             The position or name of a tier stored in the TextGrid.
 
+        Raises
+        ------
+        NameError
+            The tier name does not exist.
+        IndexError
+            The tier number exceeds the number of tiers.
+
         Returns
         -------
         :class:`~mytextgrid.core.interval_tier.IntervalTier` or :class:`~mytextgrid.core.interval_tier.PointTier`
@@ -340,8 +358,10 @@ class TextGrid:
         if tier_position is None:
             raise NameError(f'The specified tier name {tier} does not exist')
         if tier_position > len(self):
-            raise IndexError(f'The specified tier number {tier_position}'
-            'exceeds the number of tiers {len(self)}')
+            raise IndexError(
+            f'The specified tier number {tier_position}'
+            f'exceeds the number of tiers {len(self)}'
+            )
         return self[tier_position]
 
     def to_textgrid(self, path, encoding = 'utf-8'):
