@@ -37,6 +37,11 @@ class IntervalTier(Tier):
         -------
         tuple of (int, int)
             The left and right interval position at the inserted boundary.
+
+        Raises
+        ------
+        ValueError
+            If the the specified time already exists.
         """
         if not isinstance(time, decimal.Decimal):
             time = decimal.Decimal(str(time))
@@ -69,6 +74,11 @@ class IntervalTier(Tier):
         ----------
         time : float or decimal.Decimal
             The time (in seconds) of an existing boundary.
+
+        Raises
+        ------
+        ValueError
+            If there is there is not a boundary at the specified time.
         """
         if not isinstance(time, decimal.Decimal):
             time = decimal.Decimal(str(time))
@@ -92,7 +102,8 @@ class IntervalTier(Tier):
 
     def move_boundary(self, src_time, dst_time):
         """
-        Move the selected boundary to another time.
+        Move a boundary to another location between the time range of the left and right intervals
+        of the source location.
 
         Parameters
         ----------
@@ -100,6 +111,11 @@ class IntervalTier(Tier):
             The time (in seconds) of an existing boundary.
         dst_time : float or decimal.Decimal
             The time (in seconds) where the boundary will be moved to.
+
+        Raises
+        ------
+        ValueError
+            If the new time location is outside of the time range of the left and right intervals.
         """
         # Normalize numbers
         if not isinstance(src_time, decimal.Decimal):
