@@ -21,8 +21,7 @@ copyright = '2021, Rolando Muñoz Aramburú'
 author = 'Rolando Muñoz Aramburú'
 
 # The full version, including alpha/beta/rc tags
-release = 'v0.3.1'
-
+release = 'v0.3.2'
 
 # -- General configuration ---------------------------------------------------
 
@@ -46,6 +45,9 @@ exclude_patterns = []
 # a list of builtin themes.
 #
 html_theme = 'classic'
+html_theme_options = {
+    'stickysidebar':True
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
