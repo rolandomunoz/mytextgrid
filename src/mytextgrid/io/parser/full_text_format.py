@@ -154,7 +154,8 @@ class FullTextParser:
                         'xmin':match.group('interval_xmin'),
                         'xmax':None,
                         'text':None
-                        })
+                        }
+                    )
 
                 if key == 'interval_xmax':
                     textgrid['tiers'][-1]['items'][-1]['xmax'] = match.group('interval_xmax')
