@@ -142,4 +142,4 @@ def to_json(textgrid_obj, path, encoding = 'utf-8'):
                 )
 
     with open(path, 'w', encoding = encoding) as file_object:
-        json.dump(textgrid, file_object, indent = 4)
+        json.dump(textgrid, file_object, ensure_ascii = False, indent = 4)
