@@ -3,7 +3,8 @@ import csv
 import json
 
 def to_textgrid(textgrid_obj, path, encoding = 'utf-8'):
-    """Write TextGrid to a text file.
+    """
+    Write TextGrid to a text file.
 
     Parameters
     ----------
@@ -54,7 +55,8 @@ def to_textgrid(textgrid_obj, path, encoding = 'utf-8'):
                     file.write(f'            mark = "{item.text}" \n')
 
 def to_csv(textgrid_obj, path, encoding = 'utf-8'):
-    """Write TextGrid to a csv file.
+    """
+    Write TextGrid to a csv file.
 
     Parameters
     ----------
@@ -92,7 +94,8 @@ def to_csv(textgrid_obj, path, encoding = 'utf-8'):
             spamwriter.writerow([str(item) for item in row])
 
 def to_json(textgrid_obj, path, encoding = 'utf-8'):
-    """Write TextGrid to a json file.
+    """
+    Write TextGrid to a json file.
 
     Parameters
     ----------
