@@ -101,7 +101,8 @@ class FullTextParser:
         """
         basename = os.path.splitext(os.path.basename(path))[0]
 
-        textgrid = {'basename':basename,
+        textgrid = {
+            'basename':basename,
             'path':path,
             'xmin':None,
             'xmax':None,
