@@ -153,7 +153,7 @@ class TextGrid:
             position = len(self)
 
         self._eval_tier_position(position)
-        self._eval_tiername(name)
+        #self._eval_tiername(name)
 
         if is_interval:
             # Insert IntervalTier
