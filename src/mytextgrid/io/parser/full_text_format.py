@@ -161,24 +161,22 @@ class FullTextParser:
                 if key == 'interval_xmax':
                     textgrid['tiers'][-1]['items'][-1]['xmax'] = match.group('interval_xmax')
 
-                if key == 'interval_text':
-                    textgrid['tiers'][-1]['items'][-1]['text'] = match.group('interval_text')
-
                 if key == 'point_number':
                     textgrid['tiers'][-1]['items'].append(
                         {'number':match.group('point_number'),
                         'mark':None
                         })
 
-                if key == 'point_mark':
-                    textgrid['tiers'][-1]['items'][-1]['mark'] = match.group('point_mark')
+                if key == 'interval_text' or key == 'point_mark':
+                    type_label = 'text' if key == 'interval_text' else 'mark'
+                    textgrid['tiers'][-1]['items'][-1][type_label] = match.group(key)
 
                 # If the text or mark field has multiple lines, read the those
                 # lines until the last
                 if key == 'interval_text2' or key == 'point_mark2':
                     text = match.group(key) + '\n'
                     enditem_pattern = re.compile('(.*)" $')
-                    item_label = 'text' if key == 'interval_text2' else 'mark'
+                    type_label = 'text' if key == 'interval_text2' else 'mark'
                     item = textgrid['tiers'][-1]['items'][-1]
 
                     while line:
@@ -187,7 +185,7 @@ class FullTextParser:
                         if match:
                             # Check the last character not to be a `"" \n`
                             if not line.endswith('"" \n'):
-                                item[item_label] = text + match.group(1)
+                                item[type_label] = text + match.group(1)
                                 break
                         text = text + line
                 line = file_object.readline()
