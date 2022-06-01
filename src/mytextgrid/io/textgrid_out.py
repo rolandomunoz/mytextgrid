@@ -43,16 +43,18 @@ def to_textgrid(textgrid_obj, path, encoding = 'utf-8'):
             if tier.is_interval():
                 # IntervalTier class
                 for item_position, item in enumerate(tier, start = 1):
+                    text = item.text.replace('"', '""')
                     file.write(f'        intervals [{item_position}]:\n')
                     file.write(f'            xmin = {item.xmin} \n')
                     file.write(f'            xmax = {item.xmax} \n')
-                    file.write(f'            text = "{item.text}" \n')
+                    file.write(f'            text = "{text}" \n')
             else:
                 # PointTier class
                 for item_position, item in enumerate(tier, start = 1):
+                    text = item.text.replace('"', '""')
                     file.write(f'        points [{item_position}]:\n')
                     file.write(f'            number = {item.time} \n')
-                    file.write(f'            mark = "{item.text}" \n')
+                    file.write(f'            mark = "{text}" \n')
 
 def to_csv(textgrid_obj, path, encoding = 'utf-8'):
     """
@@ -69,7 +71,7 @@ def to_csv(textgrid_obj, path, encoding = 'utf-8'):
 
     Notes
     -----
-    By using this method, `TextGrid` is converted to a table where non-empty items (`Interval`
+    By using this function, `TextGrid` is converted to a table where non-empty items (`Interval`
     and `Point`) become rows. Each item (row) is stored along with the tier it belongs to and
     its timestamps. When the table is done, the items (rows) are sorted by time in ascending
     order. Finally, the table is exported as a delimited text file.
