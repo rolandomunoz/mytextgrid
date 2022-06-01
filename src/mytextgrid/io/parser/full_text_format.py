@@ -25,8 +25,8 @@ def read_from_file(path, encoding = None):
             A TextGrid instance.
     """
     parser = FullTextParser()
-    textgrid_json = parser.full_textgrid_to_json(path, encoding)
-    return parser.json_to_textgrid(textgrid_json)
+    textgrid_dict = parser.full_textgrid_to_dict(path, encoding)
+    return parser.dict_to_textgrid(textgrid_dict)
 
 class FullTextParser:
     """
@@ -79,27 +79,49 @@ class FullTextParser:
                 return key, match
         return None, None
 
-    def full_textgrid_to_json(self, path, encoding = None):
+    def full_textgrid_to_dict(self, path, encoding = None):
         """
-        Parse a full text TextGrid file into a JSON formatted str.
+        Parse a full text TextGrid file into a complex dict.
+
+        {
+            'basename': str,
+            'path': str,
+            'xmin': str,
+            'xmax': str,
+            'tiers': [
+                {
+                    class: str,
+                    tier_name: str,
+                    items: [
+                        {
+                            'xmin': str
+                            'xmax': str
+                            '{"text", "mark"}': str
+                        },
+                        .
+                        .
+                        .
+                    ]
+                },
+                .
+                .
+                .
+                
+            ]
+        }
 
         Parameters
         ----------
         path : str
-            A JSON formatted str created from a TextGrid file.
+            The path of a full-formatted TextGrid file.
         encoding : str, default None, detect automatically the encoding.
             The name of the encoding used to decode the file. See the codecs module for the list
             supported encodings.
 
         Returns
         -------
-            TextGrid
-                A TextGrid with the JSON formatted str content.
-
-        See also
-        --------
-        mytextgrid.Parser.full_textgrid_to_json : Returns a JSON formatted str created from a
-        TextGrid file.
+            dict
+                A `dict` representation of the TextGrid file.
         """
         basename = os.path.splitext(os.path.basename(path))[0]
 
@@ -143,7 +165,7 @@ class FullTextParser:
                         {
                         'class': match.group(key),
                         'tier_name':None,
-                        'items':[]
+                        'items': []
                         })
 
                 if key == 'tier_name':
@@ -153,9 +175,9 @@ class FullTextParser:
                 if key == 'interval_xmin':
                     textgrid['tiers'][-1]['items'].append(
                         {
-                        'xmin':match.group(key),
-                        'xmax':None,
-                        'text':None
+                        'xmin': match.group(key),
+                        'xmax': None,
+                        'text': None
                         }
                     )
 
@@ -192,24 +214,28 @@ class FullTextParser:
                                 break
                         text = text + line
                 line = file_object.readline()
-        return json.dumps(textgrid)
+        return textgrid
 
     @staticmethod
-    def json_to_textgrid(textgrid_json_str):
+    def dict_to_textgrid(textgrid):
         """
-        Build and return a TextGrid from a JSON formatted str.
+        Build and return a :clas:`mytextgrid.TextGrid` from a dict formatted TextGrid.
 
         Parameters
         ----------
-        textgrid_json_str : str
-            A JSON formatted str created by `self.full_textgrid_to_json`.
+        textgrid : dict of a TextGrid
+            A dict formatted created by :meth:`FullTextParser.full_textgrid_to_dict`.
 
         Returns
         -------
-            TextGrid
-                A TextGrid with the JSON formatted str content.
+            :class:`mytextgrid.TextGrid`
+                A TextGrid object.
+
+        See also
+        --------
+        mytextgrid.Parser.full_textgrid_to_dict : Returns a dict formatted str created from a
+        TextGrid file.
         """
-        textgrid = json.loads(textgrid_json_str)
 
         # Init TextGrid object
 
