@@ -2,7 +2,7 @@
 Create and manipulate TextGrid objects.
 """
 import decimal
-from mytextgrid.io import export
+from mytextgrid.io import textgrid_out
 from mytextgrid.core.interval_tier import IntervalTier
 from mytextgrid.core.point_tier import PointTier
 
@@ -375,7 +375,7 @@ class TextGrid:
         encoding : str, default utf-8
             The encoding of the resulting file.
         """
-        export.to_textgrid(self, path, encoding)
+        textgrid_out.to_textgrid(self, path, encoding)
 
     def to_csv(self, path, encoding = 'utf-8'):
         """
@@ -388,7 +388,7 @@ class TextGrid:
         encoding : str, default utf-8
             The encoding of the resulting file.
         """
-        export.to_csv(self, path, encoding)
+        textgrid_out.to_csv(self, path, encoding)
 
     def to_json(self, path, encoding = 'utf-8'):
         """
@@ -401,7 +401,7 @@ class TextGrid:
         encoding : str, default utf-8
             The encoding of the resulting file
         """
-        export.to_json(self, path, encoding)
+        textgrid_out.to_json(self, path, encoding)
 
     @staticmethod
     def _eval_tier_position(tier_position):
