@@ -17,6 +17,6 @@ def read_from_file(path, encoding = None):
         :class:`mytextgrid.TextGrid`
             A TextGrid instance.
     """
-    textgrid_dict = full_text_format.full_textgrid_to_dict(path, encoding)
+    textgrid_dict = full_text_format.textgrid_to_dict(path, encoding)
     textgrid_obj = full_text_format.dict_to_textgrid(textgrid_dict)
     return textgrid_obj
