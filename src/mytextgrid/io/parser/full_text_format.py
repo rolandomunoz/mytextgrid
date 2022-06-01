@@ -121,58 +121,60 @@ class FullTextParser:
                 key, match = self._parse_line(line)
                 # Check header
                 if key == 'file_type':
-                    file_type = match.group('file_type')
+                    file_type = match.group(key)
                     if not file_type == 'ooTextFile':
                         raise OSError(f'The file {path} is not a Praat object.')
+
                 if key == 'object_class':
-                    object_class = match.group('object_class')
+                    object_class = match.group(key)
                     if not object_class == 'TextGrid':
                         raise OSError(f'The file {path} is not a TextGrid.')
 
                 # TextGrid info
                 if key == 'tg_xmin':
-                    textgrid['xmin'] = match.group('tg_xmin')
+                    textgrid['xmin'] = match.group(key)
 
                 if key == 'tg_xmax':
-                    textgrid['xmax'] = match.group('tg_xmax')
+                    textgrid['xmax'] = match.group(key)
 
                 # Tier info
                 if key == 'tier_class':
                     textgrid['tiers'].append(
                         {
-                        'class': match.group('tier_class'),
+                        'class': match.group(key),
                         'tier_name':None,
                         'items':[]
                         })
 
                 if key == 'tier_name':
-                    textgrid['tiers'][-1]['tier_name'] = match.group('tier_name')
+                    textgrid['tiers'][-1]['tier_name'] = match.group(key)
 
                 # Item content
                 if key == 'interval_xmin':
                     textgrid['tiers'][-1]['items'].append(
                         {
-                        'xmin':match.group('interval_xmin'),
+                        'xmin':match.group(key),
                         'xmax':None,
                         'text':None
                         }
                     )
 
                 if key == 'interval_xmax':
-                    textgrid['tiers'][-1]['items'][-1]['xmax'] = match.group('interval_xmax')
+                    textgrid['tiers'][-1]['items'][-1]['xmax'] = match.group(key)
 
                 if key == 'point_number':
                     textgrid['tiers'][-1]['items'].append(
-                        {'number':match.group('point_number'),
+                        {'number':match.group(key),
                         'mark':None
                         })
 
                 if key == 'interval_text' or key == 'point_mark':
                     type_label = 'text' if key == 'interval_text' else 'mark'
-                    textgrid['tiers'][-1]['items'][-1][type_label] = match.group(key)
+                    text = match.group(key).replace('""', '"')
+                    textgrid['tiers'][-1]['items'][-1][type_label] = text
 
                 # If the text or mark field has multiple lines, read the those
-                # lines until the last
+                # lines until the last.
                 if key == 'interval_text2' or key == 'point_mark2':
                     text = match.group(key) + '\n'
                     enditem_pattern = re.compile('(.*)" $')
@@ -185,7 +187,8 @@ class FullTextParser:
                         if match:
                             # Check the last character not to be a `"" \n`
                             if not line.endswith('"" \n'):
-                                item[type_label] = text + match.group(1)
+                                text = text + match.group(1)
+                                item[type_label] = text.replace('""', '"')
                                 break
                         text = text + line
                 line = file_object.readline()
