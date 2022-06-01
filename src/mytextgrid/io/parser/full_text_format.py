@@ -161,7 +161,6 @@ class FullTextParser:
                     textgrid['tiers'][-1]['items'][-1]['xmax'] = match.group('interval_xmax')
 
                 if key == 'interval_text':
-                    a= match.group('interval_text')
                     textgrid['tiers'][-1]['items'][-1]['text'] = match.group('interval_text')
 
                 if key == 'point_number':
