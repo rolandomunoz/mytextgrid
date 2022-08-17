@@ -4,7 +4,7 @@ from mytextgrid._eval import EvalTimeRange
 decimal.getcontext().prec = 16
 
 class Tier:
-    """Tier is the base class for IntervalTier and PointTier. It represent a items container."""
+    """Tier is the base class for IntervalTier and PointTier classes. It represents an item's container."""
 
     def __init__(self, name = '', xmin = 0, xmax = 1, is_interval = True):
         self.name = name
@@ -25,12 +25,12 @@ class Tier:
 
     def get_duration(self):
         """
-        Return duration in seconds of Tier.
+        Return the duration (in seconds) of the Tier instance.
 
         Return
         ------
             decimal.Decimal
-                The duration in seconds of Tier.
+                The duration in seconds of a Tier instance.
         """
         return self.xmax - self.xmin
 
