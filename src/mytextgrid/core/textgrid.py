@@ -70,7 +70,7 @@ class TextGrid:
         xmax = decimal.Decimal(str(value))
 
         if xmax < self._xmin:
-            raise ValueError('max must be greater than xmin.')
+            raise ValueError('xmax must be greater than xmin.')
 
         # Change the time in all tiers
         for tier in self:
