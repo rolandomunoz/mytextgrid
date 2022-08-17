@@ -37,18 +37,64 @@ class TextGrid:
     """
     def __init__(self, name= "", xmin = 0, xmax = 1):
         self.name = name
-        self.xmin = decimal.Decimal(str(xmin))
-        self.xmax = decimal.Decimal(str(xmax))
-        self.tiers = []
+        self._xmin = decimal.Decimal(str(xmin))
+        self._xmax = decimal.Decimal(str(xmax))
+        if self._xmin >= self._xmax:
+            raise ValueError('xmax must be greater than xmin.')
+        self._tiers = []
+
+    @property
+    def xmin(self):
+        return self._xmin
+
+    @xmin.setter
+    def xmin(self, value):
+        xmin = decimal.Decimal(str(value))
+
+        if xmin > self._xmax:
+            raise ValueError('xmin must be lesser than xmax.')
+
+        # Change the time in all tiers
+        for tier in self:
+            tier.xmin = xmin
+
+        # Change the object time
+            self._xmin = xmin
+
+    @property
+    def xmax(self):
+        return self._xmax
+
+    @xmax.setter
+    def xmax(self, value):
+        xmax = decimal.Decimal(str(value))
+
+        if xmax < self._xmin:
+            raise ValueError('max must be greater than xmin.')
+
+        # Change the time in all tiers
+        for tier in self:
+            tier.xmax = xmax
+
+        # Change the object time
+            self._xmax = xmax
+
+    @property
+    def tiers(self):
+        return self._tiers
+
+    @tiers.setter
+    def tiers(self, value):
+        self._tiers = value
 
     def __len__(self):
-        return len(self.tiers)
+        return len(self._tiers)
 
     def __iter__(self):
-        return iter(self.tiers)
+        return iter(self._tiers)
 
     def __getitem__(self, key):
-        return self.tiers[key]
+        return self._tiers[key]
 
     def describe(self):
         """
