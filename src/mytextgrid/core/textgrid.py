@@ -85,7 +85,7 @@ class TextGrid:
 
     @tiers.setter
     def tiers(self, value):
-        self._tiers = value
+        raise ValueError('Cannot add tiers assigment. Use insert_tier() method.')
 
     def __len__(self):
         return len(self._tiers)
