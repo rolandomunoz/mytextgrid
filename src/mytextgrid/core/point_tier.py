@@ -1,6 +1,7 @@
 """Create and manipulate point tiers objects"""
 import decimal
 from mytextgrid.core.tier import Tier
+from mytextgrid.eval import obj_to_decimal
 decimal.getcontext().prec = 16
 
 class PointTier(Tier):
@@ -117,7 +118,50 @@ class PointTier(Tier):
 class Point:
     """Represent a Point object which is the minimal unit of a PointTier object"""
 
-    def __init__(self, time, text = ""):
-        self.class_ = 'Point'
-        self.time = decimal.Decimal(str(time))
-        self.text = text
+    def __init__(self, time, text = ''):
+
+        # Check input type
+        if not isinstance(time, (int, float, str, decimal.Decimal)):
+            raise TypeError('time MUST BE an int, float, str or decimal.Decimal.')
+        if not isinstance(text, str):
+            raise TypeError('text MUST BE a str.')
+
+        self._time = obj_to_decimal(time)
+        self._text = text
+
+    @property
+    def time(self):
+        """
+        Return _time attribute.
+        """
+        return self._time
+
+    @property
+    def xmin(self):
+        """
+        Return _time attribute.
+        """
+        return self._time
+
+    @property
+    def xmax(self):
+        """
+        Return _time attribute.
+        """
+        return self._time
+
+    @property
+    def text(self):
+        """
+        Return _text attribute.
+        """
+        return self._text
+
+    @text.setter
+    def text(self, value):
+        """
+        Modify _text attribute.
+        """
+        if not isinstance(value, str):
+            raise TypeError('text MUST BE a str')
+        self._text = value
