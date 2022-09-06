@@ -5,30 +5,33 @@ from mytextgrid.eval import obj_to_decimal
 decimal.getcontext().prec = 16
 
 class PointTier(Tier):
-    """Represent a tier that contains Point objects."""
-
+    """
+    Represent a tier that contains Point objects.
+    """
     def __init__(self, name = '', xmin = 0, xmax = 1):
         super().__init__(name, xmin, xmax, is_interval = False)
 
     def insert_point(self, time, text = ''):
-        """Insert a Point into PointTier.
+        """
+        Insert a Point into PointTier.
 
         Parameters
         ----------
-        time : float or decimal.Decimal
-            The time in seconds where the Point will be inserted.
+        time : int, float, str or :class:`decimal.Decimal`
+            The time in seconds where a Point object will be inserted.
         text : str
             The text of the selected Point.
         """
-        if not isinstance(time, decimal.Decimal):
-            time = decimal.Decimal(str(time))
+        time_ = obj_to_decimal(time)
+        self.eval_time_range(time_) # Check if out of range
 
-        if self.is_point_at_time(time):
-            raise ValueError(f'Cannot insert a point at {time}')
+        index = self.get_index_at_time(time_)
+        if not index is None:
+            raise ValueError(f'Cannot insert a Point at {time}.')
 
-        point = Point(time, text)
-        self.items.append(point)
-        self.items.sort(key=lambda x:x.time)
+        point = Point(time_, text)
+        self._items.append(point)
+        self._items.sort(key=lambda x:x.time)
 
     def insert_points(self, *times):
         """Insert various empty points into PointTier.
@@ -41,79 +44,63 @@ class PointTier(Tier):
         for time in times:
             self.insert_point(time)
 
-    def remove_point(self, position):
-        """Remove a Point.
-
-        Parameters
-        ----------
-        position : int
-            The position of the Point in PointTier. It must be 0 <= position < len(PointTier).
+    def move_point(self, src_time, dst_time):
         """
-        self.items.pop(position)
-
-    def set_point_text(self, position, text):
-        """Set the text content of an existing Point.
-
-        Parameters
-        ----------
-        position : int
-            The position of the Point in PointTier. It must be 0 <= position < len(PointTier).
-        text: str
-            The text of the selected Point.
+        Move a point from a time position to another.
         """
-        self.items[position].text = text
+        pass
 
-    def get_time_of_point(self, position):
-        """Return the time of a Point.
+    def remove_point(self, index):
+        """
+        Remove a Point.
 
         Parameters
         ----------
-        position : int
-            The position of the Point in PointTier. It must be 0 <= position < len(PointTier).
+        index : int
+            The index of the Point in PointTier. It must be 0 <= index < len(PointTier).
+        """
+        self._items.pop(index)
+
+    def get_index_at_time(self, time):
+        """
+        Get the index of an existing `Point`.
+
+        Parameters
+        ----------
+        time : int, float, str or :class:`decimal.Decimal`
+            The position in seconds of the :class:`mytextgrid.core.point_tier.Interval`.
 
         Returns
         -------
-        str
-            Return the time of the selected Point.
+        int or None
+            Return the index of the point. If not found, return `None`.
         """
-        return self.items[position].time
+        time_ = obj_to_decimal(time)
+        self.eval_time_range(time_) # Check if out of range
 
-    def get_label_of_point(self, position):
-        """Return the text content of a Point.
+        for index, point in enumerate(self._items):
+            if point.time == time_:
+                return index
+        return None
+
+    def get_point_at_time(self, time):
+        """
+        Get the point at the specified time in the PointTier.
 
         Parameters
         ----------
-        position : int
-            The position of the Point in PointTier. It must be 0 <= position < len(PointTier)
+        time : int, float, str or :class:`decimal.Decimal`
+            The position in seconds of the :class:`mytextgrid.core.point_tier.Interval`.
 
         Returns
         -------
-        str
-            Return the text of the selected Point.
+        :class:`mytextgrid.core.point_tier.Point` or None
+            Return the index of the point. If not found, return `None`.
         """
-        return self.items[position].text
-
-    def is_point_at_time(self, time):
-        """Evaluate if a Point exists in the specified time.
-
-        Parameters
-        ----------
-        time : float or decimal.Decimal
-            Time in seconds.
-        Returns
-        -------
-        bool
-            Return True if a Point exists in the specified time. Otherwise, return False.
-        """
-        if not isinstance(time, decimal.Decimal):
-            time = decimal.Decimal(str(time))
-
-        # Check if out of range
-        self.eval_time_range.check_time(time)
-        for point in self:
-            if point.time == time:
-                return True
-        return False
+        index = self.get_index_at_time(time)
+        if index is None:
+            return None
+        return self._items[index]
 
 class Point:
     """Represent a Point object which is the minimal unit of a PointTier object"""
