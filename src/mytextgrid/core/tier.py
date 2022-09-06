@@ -1,6 +1,6 @@
 """Create and manipulate tier objects"""
 import decimal
-from mytextgrid._eval import EvalTimeRange
+from mytextgrid.eval import obj_to_decimal
 decimal.getcontext().prec = 16
 
 class Tier:
@@ -8,12 +8,40 @@ class Tier:
     This is a base class for :class:`IntervalTier` and :class:`PointTier classes`. It represents an item's container.
     """
     def __init__(self, name = '', xmin = 0, xmax = 1, is_interval = True):
+        """
+        A base class to build a Interval or Point tier.
+
+        Parameters
+        ----------
+        name : str, default ''
+            The name of the tier.
+        xmin : int, float str or decimal.Decimal
+            The starting time (in seconds) of the tier.
+        xmin : int, float str or decimal.Decimal
+            The ending time (in seconds) of the tier.
+        is_interval : bool, defaul True
+            True is it is an Interval tier. False if it's a Point tier.
+        """
+        # Check input type
+        if not isinstance(name, str):
+            raise TypeError('name MUST BE a str.')
+        if not isinstance(xmin, (int, float, str, decimal.Decimal)):
+            raise TypeError('xmin MUST BE an int, float, str or decimal.Decimal.')
+        if not isinstance(xmax, (int, float, str, decimal.Decimal)):
+            raise TypeError('xmax MUST BE an int, float, str or decimal.Decimal.')
+        if not isinstance(is_interval, bool):
+            raise TypeError('is_interval MUST BE a boolean value.')
+
+        xmin_ = obj_to_decimal(xmin)
+        xmax_ = obj_to_decimal(xmax)
+
+        assert xmax_ > xmin_, 'xmax MUST BE greater than xmin'
+
         self._name = name
+        self._xmin = xmin_
+        self._xmax = xmax_
         self._is_interval = is_interval
-        self._xmin = decimal.Decimal(str(xmin))
-        self._xmax = decimal.Decimal(str(xmax))
         self._items = []
-        self.eval_time_range = EvalTimeRange(self._xmin, self._xmax, level = 1)
 
     def __len__(self):
         return len(self._items)
@@ -29,44 +57,16 @@ class Tier:
         return self._name
 
     @property
-    def is_interval(self):
-        return self._is_interval
-
-    @property
     def xmin(self):
         return self._xmin
-
-    @xmin.setter
-    def xmin(self, value):
-        xmin = decimal.Decimal(str(value))
-
-        if xmin > self._xmax:
-            raise ValueError('xmin must be lesser than xmax.')
-
-        # Change the object time
-            self._xmin = xmin
 
     @property
     def xmax(self):
         return self._xmax
 
-    @xmax.setter
-    def xmax(self, value):
-        xmax = decimal.Decimal(str(value))
-
-        if xmax < self._xmin:
-            raise ValueError('xmax must be greater than xmin.')
-
-        # Change the object time
-            self._xmax = xmax
-
     @property
     def items(self):
         return self._items
-
-    @items.setter
-    def items(self, list_):
-        self.items_ = list_
 
     def get_duration(self):
         """
@@ -89,3 +89,16 @@ class Tier:
             Return True if Tier contains intervals. Otherwise, return False.
         """
         return self._is_interval
+
+    def eval_time_range(self, time):
+        """
+        Raise an exception if out of the tier range.
+        """
+        time_ = obj_to_decimal(time)
+
+        if self._xmin > time_ > self._xmax:
+            raise ValueError(f'{time_} (s) is out of range of the tier {self._name}')
+        if self._xmin == time_:
+            raise ValueError(f'{time_} seconds is at the left edge of the tier {self._name}.')
+        if self._xmax == time_:
+            raise ValueError(f'{time_} seconds is at the right edge of the tier {self._name}.')
