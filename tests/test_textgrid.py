@@ -1,12 +1,13 @@
 import sys
-import pathlib
 import unittest
+from pathlib import Path
 from copy import copy
 from decimal import Decimal
 from decimal import getcontext
-mytextgrid_path = str(pathlib.Path(__file__).parent.parent.joinpath('src'))
+mytextgrid_path = str(Path(__file__).parent.parent.joinpath('src'))
 sys.path.insert(0, mytextgrid_path)
 from mytextgrid import create_textgrid
+from mytextgrid import read_from_file
 getcontext().prec = 16
 
 class TestTextGrud(unittest.TestCase):
@@ -38,6 +39,15 @@ class TestTextGrud(unittest.TestCase):
 
     def test_get_tier_by_name(self):
         self.assertEqual(len(self.textgrid.get_tier_by_name('word')), 3)
+
+    def test_to_dict(self):
+        a = self.textgrid.to_dict()
+
+    def test_write(self):
+        path_out = Path(__file__).parent / 'test.TextGrid'
+        path_in = path_out.parent / 'Mary_John_bell-1.TextGrid'
+        textgrid_new = read_from_file(path_in)
+        textgrid_new.write(path_out)
 
 if __name__ == '__main__':
     unittest.main()

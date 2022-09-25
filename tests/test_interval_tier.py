@@ -129,6 +129,10 @@ class TestIntervalTier(unittest.TestCase):
         self.assertIsNone(tier.get_interval_at_time(12))
 
     def test_set_text(self):
+        tier = copy(self.tier)
+        tier.set_text_at_index(0, 'GAAAAAAA')
+        self.assertEqual(tier[0].text, 'GAAAAAAA')
+
         with self.assertRaises(IndexError):
             self.tier.set_text_at_index(-1, 'p', 'e', 'r', 'o', 's')
             self.tier.set_text_at_index(10, 'p', 'e', 'r', 'o', 's')
