@@ -6,7 +6,7 @@ import re
 import chardet
 from mytextgrid.core.textgrid import TextGrid
 decimal.getcontext().prec = 16
-  
+
 def textgrid_to_dict(path, encoding = None):
     """
     Parse a full text TextGrid file into a complex dict.
@@ -167,7 +167,6 @@ def dict_to_textgrid(textgrid):
     # Init TextGrid object
 
     textgrid_obj = TextGrid(
-        name = textgrid['basename'],
         xmin = decimal.Decimal(textgrid['xmin']),
         xmax = decimal.Decimal(textgrid['xmax'])
         )
@@ -178,7 +177,8 @@ def dict_to_textgrid(textgrid):
 
         if tier_class == 'IntervalTier':
             # Insert interval tier
-            tier_obj = textgrid_obj.insert_interval_tier(tier_name)
+            tier_obj = textgrid_obj.insert_tier(tier_name)
+            print(tier_obj.name)
 
             # Insert interval
             for loc, item in enumerate(tier['items']):
@@ -188,17 +188,18 @@ def dict_to_textgrid(textgrid):
                         decimal.Decimal(item['xmin'])
                     )
                 # Insert text
-                tier_obj.set_text(loc, item['text'])
+                tier_obj.set_text_at_index(loc, item['text'])
 
         if tier_class == 'TextTier':
             # Insert tier
-            tier_obj = textgrid_obj.insert_point_tier(tier_name)
+            tier_obj = textgrid_obj.insert_tier(tier_name, False)
             for item in tier['items']:
                 # Insert Point
                 tier_obj.insert_point(
                     decimal.Decimal(item['number']),
                     item['mark']
                 )
+
     return textgrid_obj
 
 def _parse_line(line):
