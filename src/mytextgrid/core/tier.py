@@ -5,7 +5,8 @@ decimal.getcontext().prec = 16
 
 class Tier:
     """
-    This is a base class for :class:`IntervalTier` and :class:`PointTier classes`. It represents an item's container.
+    This is a base class for :class:`IntervalTier` and
+    :class:`PointTier classes`. It represents an item's container.
     """
     def __init__(self, name = '', xmin = 0, xmax = 1, is_interval = True):
         """
@@ -54,18 +55,30 @@ class Tier:
 
     @property
     def name(self):
+        """
+        Return the `self._name` attribute.
+        """
         return self._name
 
     @property
     def xmin(self):
+        """
+        Return the `self._xmin` attribute.
+        """
         return self._xmin
 
     @property
     def xmax(self):
+        """
+        Return the `self._xmax` attribute.
+        """
         return self._xmax
 
     @property
     def items(self):
+        """
+        Return the `self._items` attribute.
+        """
         return self._items
 
     def get_duration(self):
