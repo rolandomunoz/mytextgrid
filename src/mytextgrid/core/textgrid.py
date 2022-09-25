@@ -82,7 +82,7 @@ class TextGrid:
         """
         Display compactly the attributes and structure of TextGrid.
 
-        Show tier information: position, type, name and size.
+        Show tier information: index, type, name and size.
 
         Examples
         --------
@@ -156,7 +156,7 @@ class TextGrid:
         """
         return self._xmax - self._xmin
 
-    def insert_tier(self, name, interval_tier = True, position = None):
+    def insert_tier(self, name, interval_tier = True, index = None):
         """
         Insert a tier in the TextGrid.
 
@@ -166,43 +166,43 @@ class TextGrid:
             The name of the tier.
         interval_tier : bool
             If True, insert an :class:`IntervalTier`. Otherwise, insert a :class:`PointTier`.
-        position : int, default None, meaning the last position.
-            The position of the tier.
+        index : int, default None, meaning the last index.
+            The index of the tier.
 
         Returns
         -------
         :class:`IntervalTier` or :class:`PointTier`
             An empty tier.
         """
-        if position is None:
-            position = len(self)
+        if index is None:
+            index = len(self)
 
-        if not isinstance(position, int):
-            raise ValueError('position MUST BE a int value.')
+        if not isinstance(index, int):
+            raise ValueError('index MUST BE a int value.')
 
         if interval_tier:
             tier = IntervalTier(name, self._xmin, self._xmax)
         else:
             tier = PointTier(name, self._xmin, self._xmax)
-        self.tiers.insert(position, tier)
+        self.tiers.insert(index, tier)
 
         return tier
 
-    def remove_tier(self, position):
+    def remove_tier(self, index):
         """
         Remove a tier from the TextGrid.
 
         Parameters
         ----------
         tier : int
-            The tier position.
+            The tier index.
 
         Returns
         -------
         :class:`IntervalTier` or :class:`PointTier`
             The removed tier.
         """
-        return self._tiers.pop(position)
+        return self._tiers.pop(index)
 
     def get_tier_by_name(self, tier_name):
         """
