@@ -44,12 +44,6 @@ class PointTier(Tier):
         for time in times:
             self.insert_point(time)
 
-    def move_point(self, src_time, dst_time):
-        """
-        Move a point from a time position to another.
-        """
-        pass
-
     def remove_point(self, index):
         """
         Remove a Point.
