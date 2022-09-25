@@ -91,13 +91,13 @@ class TextGrid:
         >>> # Creating TextGrid
         >>> tg = mytextgrid.create_textgrid('perro', 0, 1)
         >>> # Inserting tiers
-        >>> tg.insert_point_tier("tone")
-        >>> tg.insert_interval_tier("segment")
-        >>> tg.insert_point('tone', 0.66, "H")
+        >>> tone_tier = tg.insert_tier("tone", False)
+        >>> segment_tier = tg.insert_tier("segment")
         >>> # Insert content into the created tiers
-        >>> tg.insert_point('tone', 0.9, "L")
-        >>> tg.insert_boundaries('segment', 0.23, 0.30, 0.42, 0.62, 0.70, 0.82, 0.98)
-        >>> tg.set_interval_text('segment', 1, 'e', 'l', 'p', 'e', 'rr', 'o')
+        >>> tone_tier.insert_point('tone', 0.66, "H")
+        >>> tone_tier.insert_point('tone', 0.9, "L")
+        >>> segment_tier.insert_boundaries('segment', 0.23, 0.30, 0.42, 0.62, 0.70, 0.82, 0.98)
+        >>> segment_tier.set_interval_text('segment', 1, 'e', 'l', 'p', 'e', 'rr', 'o')
 
         Once this is done, use :meth:`~mytextgrid.describe`.
 
@@ -223,6 +223,44 @@ class TextGrid:
 
         list_ = [tier for tier in self._tiers if tier.name == tier_name]
         return list_
+
+    def to_dict(self):
+        """
+        Convert a TextGrid to a dict.
+        """
+        tiers_list = []
+        for tier in self._tiers:
+            # Collect Intervals or points into a list
+            items_list = []
+            for item in tier:
+                if tier.is_interval():
+                    item = {
+                        'xmin':item.xmin,
+                        'xmax':item.xmax,
+                        'text':item.text
+                    }
+                else:
+                    item = {
+                        'number':item.time,
+                        'mark':item.text
+                    }
+                items_list.append(item)
+
+            # Put intervasl/points collection into tiers
+            tiers_list.append(
+                {
+                    'interval_tier': tier.is_interval(),
+                    'name': tier.name,
+                    'items': items_list
+                }
+            )
+        # Put tiers into TextGrid
+        textgrid_dict = {
+            'xmin': self._xmin,
+            'xmax': self._xmax,
+            'tiers': tiers_list
+        }
+        return textgrid_dict
 
     def write(self, path, encoding = 'utf-8'):
         """
