@@ -5,10 +5,10 @@ import decimal
 from mytextgrid.io import textgrid_out
 from mytextgrid.core.interval_tier import IntervalTier
 from mytextgrid.core.point_tier import PointTier
-
+from mytextgrid.eval import obj_to_decimal
 decimal.getcontext().prec = 16
 
-def create_textgrid(name, xmin = 0, xmax = 1):
+def create_textgrid(xmin = 0, xmax = 1):
     """
     Create and return an empty TextGrid.
 
@@ -17,8 +17,6 @@ def create_textgrid(name, xmin = 0, xmax = 1):
 
     Parameters
     ----------
-    name : str
-        The name of the TextGrid.
     xmin : float, default 0
         The starting time of the TextGrid.
     xmax : float, default 1
@@ -29,63 +27,47 @@ def create_textgrid(name, xmin = 0, xmax = 1):
         :class:`mytextgrid.TextGrid`
             A TextGrid instance.
     """
-    return TextGrid(name, xmin, xmax)
+    return TextGrid(xmin, xmax)
 
 class TextGrid:
     """
     A class representation for a TextGrid.
     """
-    def __init__(self, name= "", xmin = 0, xmax = 1):
-        self.name = name
-        self._xmin = decimal.Decimal(str(xmin))
-        self._xmax = decimal.Decimal(str(xmax))
-        if self._xmin >= self._xmax:
-            raise ValueError('xmax must be greater than xmin.')
+    def __init__(self, xmin = 0, xmax = 1):
+        if not isinstance(xmin, (int, float, str, decimal.Decimal)):
+            raise TypeError('xmin MUST BE an int, float, str or decimal.Decimal.')
+        if not isinstance(xmax, (int, float, str, decimal.Decimal)):
+            raise TypeError('xmax MUST BE an int, float, str or decimal.Decimal.')
+
+        xmin_ = obj_to_decimal(xmin)
+        xmax_ = obj_to_decimal(xmax)
+        assert xmax_ > xmin_, 'xmax MUST BE greater than xmin'
+
+        # Attributes
+        self._xmin = xmin_
+        self._xmax = xmax_
         self._tiers = []
 
     @property
     def xmin(self):
+        """
+        Return the `_xmin` attribute
+        """
         return self._xmin
-
-    @xmin.setter
-    def xmin(self, value):
-        xmin = decimal.Decimal(str(value))
-
-        if xmin > self._xmax:
-            raise ValueError('xmin must be lesser than xmax.')
-
-        # Change the time in all tiers
-        for tier in self:
-            tier.xmin = xmin
-
-        # Change the object time
-            self._xmin = xmin
 
     @property
     def xmax(self):
+        """
+        Return the `_xmax` attribute
+        """
         return self._xmax
-
-    @xmax.setter
-    def xmax(self, value):
-        xmax = decimal.Decimal(str(value))
-
-        if xmax < self._xmin:
-            raise ValueError('xmax must be greater than xmin.')
-
-        # Change the time in all tiers
-        for tier in self:
-            tier.xmax = xmax
-
-        # Change the object time
-            self._xmax = xmax
 
     @property
     def tiers(self):
+        """
+        Return the `_tiers` attribute
+        """
         return self._tiers
-
-    @tiers.setter
-    def tiers(self, value):
-        raise ValueError('Cannot add tiers assigment. Use insert_tier() method.')
 
     def __len__(self):
         return len(self._tiers)
@@ -105,7 +87,7 @@ class TextGrid:
         Examples
         --------
         First, read or create a :meth:`~mytextgrid.TextGrid`.
-    
+
         >>> # Creating TextGrid
         >>> tg = mytextgrid.create_textgrid('perro', 0, 1)
         >>> # Inserting tiers
@@ -130,10 +112,10 @@ class TextGrid:
         0	TextTier	tone	(size = 2)
         1	IntervalTier	segment	(size = 8)
         """
-        size = len(self)
+        size = len(self._tiers)
 
         summary = []
-        for index, tier in enumerate(self):
+        for index, tier in enumerate(self._tiers):
             tier_class = 'IntervalTier' if tier.is_interval else 'TextTier'
             summary.append(
                 f'    {index}\t'
@@ -150,13 +132,11 @@ class TextGrid:
 
         message = (
             'TextGrid:\n'
-            f'    Name:                  {self.name}\n'
             f'    Startig time (sec):    {self.xmin}\n'
             f'    Ending time (sec):     {self.xmax}\n'
             f'    Number of tiers:       {size}'
             f'{summary_str}'
             )
-
         print(message)
 
     def get_duration(self):
@@ -173,149 +153,78 @@ class TextGrid:
         >>> tg = mytextgrid.create_textgrid('banana', 0, 1.2)
         >>> tg.get_duration()
         1.2
-
         """
-        return self.xmax - self.xmin
+        return self._xmax - self._xmin
 
-    def insert_tier(self, name, is_interval = True, position = None):
+    def insert_tier(self, name, interval_tier = True, position = None):
         """
-        Insert an interval tier into TextGrid at specified position.
+        Insert a tier in the TextGrid.
 
         Parameters
         ----------
         name : str
-            The name of the inserted tier.
-        is_interval : bool
-            If True, insert an IntervalTier. Otherwise, return a PointTier.
+            The name of the tier.
+        interval_tier : bool
+            If True, insert an :class:`IntervalTier`. Otherwise, insert a :class:`PointTier`.
         position : int, default None, meaning the last position.
-            The position of the inserted tier. Must verify 0 <= position <= len(TextGrid).
+            The position of the tier.
 
         Returns
         -------
-        IntervalTier
+        :class:`IntervalTier` or :class:`PointTier`
             An empty tier.
         """
         if position is None:
             position = len(self)
 
-        self._eval_tier_position(position)
-        #self._eval_tiername(name)
+        if not isinstance(position, int):
+            raise ValueError('position MUST BE a int value.')
 
-        if is_interval:
-            # Insert IntervalTier
-            tier = IntervalTier(name, self.xmin, self.xmax)
+        if interval_tier:
+            tier = IntervalTier(name, self._xmin, self._xmax)
         else:
-            # Insert PointTier
-            tier = PointTier(name, self.xmin, self.xmax)
+            tier = PointTier(name, self._xmin, self._xmax)
         self.tiers.insert(position, tier)
 
-        return self[position]
+        return tier
 
-    def insert_interval_tier(self, name, position = None):
+    def remove_tier(self, position):
         """
-        Insert an interval tier into TextGrid at specified position.
+        Remove a tier from the TextGrid.
 
         Parameters
         ----------
-        name : str
-            The name of the inserted tier.
-        position : int, default None, meaning the last position.
-            The position of the inserted tier. Must verify 0 <= position <= len(TextGrid).
+        tier : int
+            The tier position.
 
         Returns
         -------
-        :class:`~mytextgrid.core.textgrid.IntervalTier`
-            An empty tier.
-
-        See Also
-        ---------
-        mytextgrid.TextGrid.insert_boundaries: Insert one or more boundaries.
-        mytextgrid.TextGrid.set_interval_text: Set the text for one or more of intervals.
+        :class:`IntervalTier` or :class:`PointTier`
+            The removed tier.
         """
-        return self.insert_tier(name, True, position)
+        return self._tiers.pop(position)
 
-    def insert_point_tier(self, name, position = None):
+    def get_tier_by_name(self, tier_name):
         """
-        Insert a point tier into TextGrid at specified position.
+        Return a list of tier objects with the specified name.
 
         Parameters
         ----------
-        name : str
-            The name of the inserted tier.
-        position : int, default None, meaning the last position.
-            The position of the inserted tier. Must verify 0 <= position <= len(TextGrid).
+        tier : str
+            The name of a tier stored in the TextGrid.
 
         Returns
         -------
-        PointTier
-            An empty tier.
+        list of tiers
+            A list of tiers that have the name.
         """
-        return self.insert_tier(name, False, position)
+        if not isinstance(tier_name, str):
+            raise TypeError('tier MUST BE a str')
 
-    def remove_tier(self, tier):
-        """
-        Search for the specified tier and remove it from TextGrid.
+        list_ = [tier for tier in self._tiers if tier.name == tier_name]
+        return list_
 
-        Parameters
-        ----------
-        tier : int or str
-            The position or name of a tier stored in the TextGrid.
-        """
-        target_tier = self.get_tier(tier)
-        for index, current_tier in enumerate(self):
-            if target_tier is current_tier:
-                self.tiers.pop(index)
-
-    def get_tier(self, tier):
-        """
-        Search into the TextGrid for the specified tier and return it.
-
-        By using this method, you will get access to a tier stored
-        within the TextGrid by its position or name. In the case
-        where two o more tiers have the same name, this methods
-        will return only the first occurrence.
-
-        Parameters
-        ----------
-        tier : int or str
-            The position or name of a tier stored in the TextGrid.
-
-        Raises
-        ------
-        NameError
-            The tier name does not exist.
-        IndexError
-            The tier number exceeds the number of tiers.
-
-        Returns
-        -------
-        :class:`~mytextgrid.core.interval_tier.IntervalTier` or :class:`~mytextgrid.core.interval_tier.PointTier`
-            A tier stored in the TextGrid.
-        """
-        if isinstance(tier, int):
-            if tier < 0:
-                raise ValueError('Tier position must be a positive integer')
-            tier_position = tier
-        elif isinstance(tier, str):
-            tier_position = None
-            for index, tier_ in enumerate(self):
-                if tier_.name == tier:
-                    tier_position = index
-                    break
-        else:
-            raise TypeError('tier must be a string or an integer')
-
-        # Raise an error if tier does not exist or it is out of range
-        if tier_position is None:
-            raise NameError(f'The specified tier name {tier} does not exist')
-        if tier_position > len(self):
-            raise IndexError(
-            f'The specified tier number {tier_position}'
-            f'exceeds the number of tiers {len(self)}'
-            )
-        return self[tier_position]
-
-    def to_textgrid(self, path, encoding = 'utf-8'):
+    def write(self, path, encoding = 'utf-8'):
         """
         Write TextGrid to a text file.
 
@@ -323,46 +232,7 @@ class TextGrid:
         ----------
         path : str
             The path where the TextGrid file will be created.
-        encoding : str, default utf-8
-            The encoding of the resulting file.
+        encoding : str, default 'utf-8'
+            The encoding of the file.
         """
         textgrid_out.to_textgrid(self, path, encoding)
-
-    def to_csv(self, path, encoding = 'utf-8'):
-        """
-        Convert TextGrid to a csv file.
-
-        Parameters
-        ----------
-        path : str
-            The path where the delimited text file will be created.
-        encoding : str, default utf-8
-            The encoding of the resulting file.
-        """
-        textgrid_out.to_csv(self, path, encoding)
-
-    def to_json(self, path, encoding = 'utf-8'):
-        """
-        Write TextGrid to a json file.
-
-        Parameters
-        ----------
-        path : str
-            The path where the delimited text file will be created.
-        encoding : str, default utf-8
-            The encoding of the resulting file
-        """
-        textgrid_out.to_json(self, path, encoding)
-
-    @staticmethod
-    def _eval_tier_position(tier_position):
-        if isinstance(tier_position, int):
-            if tier_position < 0:
-                raise ValueError('Tier position must be a positive integer')
-        else:
-            raise TypeError('Tier position must be a positive integer')
-
-    @staticmethod
-    def _eval_tiername(name):
-        if " " in name:
-            raise SyntaxError('Tier names must not contain white spaces')
