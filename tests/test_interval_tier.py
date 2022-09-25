@@ -4,11 +4,10 @@ import unittest
 from copy import copy
 from decimal import Decimal
 from decimal import getcontext
-getcontext().prec = 16
-
 mytextgrid_path = str(pathlib.Path(__file__).parent.parent.joinpath('src'))
 sys.path.insert(0, mytextgrid_path)
 from mytextgrid.core.interval_tier import IntervalTier
+getcontext().prec = 16
 
 class TestIntervalTier(unittest.TestCase):
 

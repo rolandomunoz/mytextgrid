@@ -12,9 +12,13 @@ class Testpoint(unittest.TestCase):
     """
     Test Point object methods.
     """
-    def test_init(self):
+    def setUp(self):
         time = Decimal('5.145')
-        point = Point(time, 'H')
+        self.point = Point(time, 'H')
+
+    def test_init(self):
+        point = self.point
+        time = Decimal('5.145')
 
         self.assertEqual(point.text, 'H')
         self.assertNotEqual(point.text, 'L')
