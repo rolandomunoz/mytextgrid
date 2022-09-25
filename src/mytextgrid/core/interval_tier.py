@@ -66,7 +66,8 @@ class IntervalTier(Tier):
 
         new_left_interval = Interval(
             xmin = old_interval.xmin,
-            xmax = time_
+            xmax = time_,
+            text = old_interval.text
         )
 
         new_right_interval = Interval(
