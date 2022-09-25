@@ -2,5 +2,5 @@
 (TextGrid).
 """
 from mytextgrid.core.textgrid import create_textgrid
-from mytextgrid.core.textgrid import TextGrid
 from mytextgrid.io.textgrid_in import read_from_file
+from mytextgrid.core.textgrid import TextGrid
