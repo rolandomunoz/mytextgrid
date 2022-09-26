@@ -268,9 +268,22 @@ class TextGrid:
 
         Parameters
         ----------
-        path : str
-            The path where the TextGrid file will be created.
+        path : str or :clas:`pathlib.Path`
+            The path where the TextGrid file will be written.
         encoding : str, default 'utf-8'
             The encoding of the file.
         """
         textgrid_out.textgrid_to_text_file(self, path, short_format, encoding)
+
+    def write_as_json(self, *args, **kwds):
+        """
+        Write TextGrid to a json file.
+
+        Parameters
+        ----------
+        path : str or :clas:`pathlib.Path`
+            The path where the JSON file will be written.
+        encoding : str, default utf-8
+            The encoding of the resulting file.
+        """
+        textgrid_out.textgrid_to_json(self, *args, **kwds)
