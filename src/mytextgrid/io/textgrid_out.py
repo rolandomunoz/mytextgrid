@@ -3,6 +3,7 @@ Export TextGrid files to other formats
 """
 import csv
 import json
+from decimal import Decimal
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
 
@@ -76,7 +77,7 @@ def to_csv(textgrid_obj, path, encoding = 'utf-8'):
         for row in table:
             spamwriter.writerow([str(item) for item in row])
 
-def to_json(textgrid_obj, path, encoding = 'utf-8'):
+def textgrid_to_json(textgrid_obj, path, encoding = 'utf-8'):
     """
     Write TextGrid to a json file.
 
@@ -89,40 +90,14 @@ def to_json(textgrid_obj, path, encoding = 'utf-8'):
     encoding : str, default utf-8
         The encoding of the resulting file.
     """
-    textgrid = {
-        'xmin': str(textgrid_obj.xmin),
-        'xmax': str(textgrid_obj.xmax),
-        'tiers': []
-        }
-    for tier in textgrid_obj:
-        tier_class = 'IntervalTier' if tier.is_interval() else 'TextTier'
+    dict_ = textgrid_obj.to_dict()
+    with open(path, 'w', encoding = encoding) as file_object:
+        json.dump(dict_, file_object, cls = _DecimalEncoder, ensure_ascii = False, indent = 4)
 
-        textgrid['tiers'].append(
-            {
-            'class':tier_class,
-            'name':tier.name,
-            'items':[]
-            }
-            )
+class _DecimalEncoder(json.JSONEncoder):
 
-        for item in tier:
-            if tier.is_interval():
-                # If IntervalTier
-                textgrid['tiers'][-1]['items'].append(
-                {
-                'xmin':str(item.xmin),
-                'xmax':str(item.xmax),
-                'text':item.text
-                }
-                )
-            else:
-                # If PointTier
-                textgrid['tiers'][-1]['items'].append(
-                {
-                'number':str(item.time),
-                'mark':item.text
-                }
-                )
-
-        with open(path, 'w', encoding = encoding) as file_object:
-            json.dump(textgrid, file_object, ensure_ascii = False, indent = 4)
+    def default(self, decimal_number):
+        if isinstance(decimal_number, Decimal):
+            return str(decimal_number)
+        else:
+            return super().default(decimal_number)
