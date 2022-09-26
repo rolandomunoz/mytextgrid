@@ -273,4 +273,4 @@ class TextGrid:
         encoding : str, default 'utf-8'
             The encoding of the file.
         """
-        textgrid_out.to_textgrid(self, path, encoding)
+        textgrid_out.textgrid_to_text_file(self, path, encoding)
