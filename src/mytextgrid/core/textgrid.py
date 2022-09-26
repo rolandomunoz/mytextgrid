@@ -116,7 +116,7 @@ class TextGrid:
 
         summary = []
         for index, tier in enumerate(self._tiers):
-            tier_class = 'IntervalTier' if tier.is_interval else 'TextTier'
+            tier_class = 'IntervalTier' if tier.is_interval() else 'PointTier'
             summary.append(
                 f'    {index}\t'
                 f'{tier_class}\t'
