@@ -178,7 +178,6 @@ def dict_to_textgrid(textgrid):
         if tier_class == 'IntervalTier':
             # Insert interval tier
             tier_obj = textgrid_obj.insert_tier(tier_name)
-            print(tier_obj.name)
 
             # Insert interval
             for loc, item in enumerate(tier['items']):
