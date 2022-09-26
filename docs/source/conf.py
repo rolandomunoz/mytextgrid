@@ -17,11 +17,11 @@ sys.path.insert(0, os.path.abspath('../../src/'))
 # -- Project information -----------------------------------------------------
 
 project = 'MyTextGrid'
-copyright = '2021, Rolando Muñoz Aramburú'
+copyright = '2021-2022, Rolando Muñoz Aramburú'
 author = 'Rolando Muñoz Aramburú'
 
 # The full version, including alpha/beta/rc tags
-release = 'v0.3.2'
+release = 'v0.5'
 
 # -- General configuration ---------------------------------------------------
 
