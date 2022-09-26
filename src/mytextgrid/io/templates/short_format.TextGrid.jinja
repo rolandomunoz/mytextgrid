@@ -1,0 +1,24 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+{{ textgrid.xmin }}
+{{ textgrid.xmax }}
+<exists>
+{{ textgrid.tiers|length }}
+{% for tier in textgrid.tiers %}
+"{{ "IntervalTier" if tier.interval_tier else "TextTier" }}"
+"{{ tier.name }}"
+{{ textgrid.xmin }}
+{{ textgrid.xmax }}
+{{ tier["items"]|length }}
+{% for item in tier['items'] %}
+{% if tier.interval_tier %}
+{{ item.xmin }}
+{{ item.xmax }}
+"{{ item.text }}"
+{% else %}
+{{ item.number }}
+"{{ item.mark }}"
+{% endif %}
+{% endfor %}
+{% endfor %}
