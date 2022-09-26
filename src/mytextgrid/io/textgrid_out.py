@@ -95,7 +95,9 @@ def textgrid_to_json(textgrid_obj, path, encoding = 'utf-8'):
         json.dump(dict_, file_object, cls = _DecimalEncoder, ensure_ascii = False, indent = 4)
 
 class _DecimalEncoder(json.JSONEncoder):
-
+    """
+    JSON encoder for TextGrid.
+    """
     def default(self, decimal_number):
         if isinstance(decimal_number, Decimal):
             return str(decimal_number)
