@@ -21,7 +21,7 @@ copyright = '2021-2022, Rolando Muñoz Aramburú'
 author = 'Rolando Muñoz Aramburú'
 
 # The full version, including alpha/beta/rc tags
-release = 'v0.5'
+release = 'v0.5.0'
 
 # -- General configuration ---------------------------------------------------
 
