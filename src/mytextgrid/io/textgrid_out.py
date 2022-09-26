@@ -6,7 +6,21 @@ import json
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
 
-def textgrid_to_text_file(textgrid_obj, dst_path, encoding = 'utf-8'):
+def textgrid_to_text_file(textgrid_obj, dst_path, short_format = False, encoding = 'utf-8'):
+    """
+    Write a TextGrid object to a text file.
+
+    Parameters
+    ----------
+    textgrid_obj : 
+        A TextGrid object.
+    dst_path : str or :class:`pathlib.Path`
+        The path where the text file will be stored.
+    short_format : boolean, default `False`
+        True for short format of the text file. Otherwirse, long format is applied.
+    encoding: str, default 'utf-8'
+        The encoding of the text file.
+    """
     env = Environment(
         loader=PackageLoader('mytextgrid.io'),
         autoescape=select_autoescape()
@@ -16,7 +30,8 @@ def textgrid_to_text_file(textgrid_obj, dst_path, encoding = 'utf-8'):
 
     # Variales
     dict_ = textgrid_obj.to_dict()
-    template = env.get_template('long_textgrid_format.TextGrid.jinja')
+    template_name = 'short_format.TextGrid.jinja'if short_format else 'long_format.TextGrid.jinja'
+    template = env.get_template(template_name)
     textgrid_str = template.render(textgrid = dict_)
 
     with open(dst_path, 'w', encoding = encoding) as textfile:
