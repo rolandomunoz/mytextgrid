@@ -6,7 +6,7 @@ import json
 from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
 
-def to_textgrid(textgrid_obj, dst_path, encoding = 'utf-8'):
+def textgrid_to_text_file(textgrid_obj, dst_path, encoding = 'utf-8'):
     env = Environment(
         loader=PackageLoader('mytextgrid.io'),
         autoescape=select_autoescape()
