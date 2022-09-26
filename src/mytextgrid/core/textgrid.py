@@ -262,7 +262,7 @@ class TextGrid:
         }
         return textgrid_dict
 
-    def write(self, path, encoding = 'utf-8'):
+    def write(self, path, short_format = False, encoding = 'utf-8'):
         """
         Write TextGrid to a text file.
 
@@ -273,4 +273,4 @@ class TextGrid:
         encoding : str, default 'utf-8'
             The encoding of the file.
         """
-        textgrid_out.textgrid_to_text_file(self, path, encoding)
+        textgrid_out.textgrid_to_text_file(self, path, short_format, encoding)
