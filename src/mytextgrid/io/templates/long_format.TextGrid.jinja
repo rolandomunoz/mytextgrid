@@ -3,7 +3,7 @@ Object class = "TextGrid"
 
 xmin = {{ textgrid.xmin }} 
 xmax = {{ textgrid.xmax }} 
-tiers? <exists> 
+tiers? <{% if textgrid.tiers|length %}exists{% else %}absent{% endif %}> 
 size = {{ textgrid.tiers|length }} 
 item []: 
     {% for tier in textgrid.tiers %}

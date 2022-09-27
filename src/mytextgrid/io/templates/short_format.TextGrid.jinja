@@ -3,7 +3,7 @@ Object class = "TextGrid"
 
 {{ textgrid.xmin }}
 {{ textgrid.xmax }}
-<exists>
+<{% if textgrid.tiers|length %}exists{% else %}absent{% endif %}> 
 {{ textgrid.tiers|length }}
 {% for tier in textgrid.tiers %}
 "{{ "IntervalTier" if tier.interval_tier else "TextTier" }}"
