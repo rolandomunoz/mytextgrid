@@ -8,9 +8,10 @@ mytextgrid_path = str(Path(__file__).parent.parent.joinpath('src'))
 sys.path.insert(0, mytextgrid_path)
 from mytextgrid import create_textgrid
 from mytextgrid import read_from_file
+from mytextgrid.io.textgrid_out import textgrid_to_json
 getcontext().prec = 16
 
-class TestTextGrud(unittest.TestCase):
+class TestTextGrid(unittest.TestCase):
 
     def setUp(self):
         self.textgrid = create_textgrid(0, 1)
@@ -43,11 +44,24 @@ class TestTextGrud(unittest.TestCase):
     def test_to_dict(self):
         a = self.textgrid.to_dict()
 
-    def test_write(self):
-        path_out = Path(__file__).parent / 'test.TextGrid'
-        path_in = path_out.parent / 'Mary_John_bell-1.TextGrid'
-        textgrid_new = read_from_file(path_in)
-        textgrid_new.write(path_out)
+    def test_write_files(self):
+        files_dir = Path(__file__).parent / 'files'
+
+        names = (
+            'Mary_John_bell-2.TextGrid',
+            'Mary_John_bell-1.TextGrid'
+        )
+        for name in names:
+            path_in = files_dir / name
+            path_out = files_dir.joinpath(name).with_suffix('.TextGrid.out')
+            json_out = files_dir.joinpath(name).with_suffix('.TextGrid.json')
+
+            textgrid_new = read_from_file(path_in)
+            textgrid_new.write(path_out)
+            textgrid_new.write_as_json(json_out)
+
+        tg = create_textgrid(0, 10)
+        tg.write(files_dir / 'empty.TextGrid')
 
 if __name__ == '__main__':
     unittest.main()
