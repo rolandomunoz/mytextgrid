@@ -12,14 +12,13 @@ def create_textgrid(xmin = 0, xmax = 1):
     """
     Create and return an empty TextGrid.
 
-    By using this function, you will create an empty TextGrid.
-    In order to make this instance useful, add tiers and text content.
+    An empty TextGrid does not contain any tier.
 
     Parameters
     ----------
-    xmin : float, default 0
+    xmin : int, float, str or :class:`decimal.Decimal`, default 0
         The starting time of the TextGrid.
-    xmax : float, default 1
+    xmax : int, float, str or :class:`decimal.Decimal`, default 1
         The ending time of the TextGrid.
 
     Returns
@@ -51,21 +50,21 @@ class TextGrid:
     @property
     def xmin(self):
         """
-        Return the `_xmin` attribute
+        Return the `_xmin` attribute.
         """
         return self._xmin
 
     @property
     def xmax(self):
         """
-        Return the `_xmax` attribute
+        Return the `_xmax` attribute.
         """
         return self._xmax
 
     @property
     def tiers(self):
         """
-        Return the `_tiers` attribute
+        Return the `_tiers` attribute.
         """
         return self._tiers
 
@@ -80,37 +79,31 @@ class TextGrid:
 
     def describe(self):
         """
-        Display compactly the attributes and structure of TextGrid.
+        Show the attributes and structure of a TextGrid.
 
         Show tier information: index, type, name and size.
 
         Examples
         --------
-        First, read or create a :meth:`~mytextgrid.TextGrid`.
-
-        >>> # Creating TextGrid
-        >>> tg = mytextgrid.create_textgrid('perro', 0, 1)
-        >>> # Inserting tiers
+        >>> tg = mytextgrid.create_textgrid(0, 1)
         >>> tone_tier = tg.insert_tier("tone", False)
+        >>> tone_tier.insert_tier('tone', 0.66, "H")
+        >>> tone_tier.insert_tier('tone', 0.9, "L")
         >>> segment_tier = tg.insert_tier("segment")
-        >>> # Insert content into the created tiers
-        >>> tone_tier.insert_point('tone', 0.66, "H")
-        >>> tone_tier.insert_point('tone', 0.9, "L")
         >>> segment_tier.insert_boundaries('segment', 0.23, 0.30, 0.42, 0.62, 0.70, 0.82, 0.98)
         >>> segment_tier.set_interval_text('segment', 1, 'e', 'l', 'p', 'e', 'rr', 'o')
 
-        Once this is done, use :meth:`~mytextgrid.describe`.
+        Use :meth:`~mytextgrid.describe` to describe a TextGrid.
 
-        >>> # Describing TextGrid
         >>> tg.describe()
-        TextGrid:
-            Name:                  perro
-            Startig time (sec):    0
-            Ending time (sec):     1
-            Number of tiers:       2
-        Tiers Summary:
-        0	TextTier	tone	(size = 2)
-        1	IntervalTier	segment	(size = 8)
+            TextGrid:
+                Name:                  perro
+                Startig time (sec):    0
+                Ending time (sec):     1
+                Number of tiers:       2
+            Tiers Summary:
+            0	TextTier	tone	(size = 2)
+            1	IntervalTier	segment	(size = 8)
         """
         size = len(self._tiers)
 
@@ -141,7 +134,7 @@ class TextGrid:
 
     def get_duration(self):
         """
-        Return time duration in seconds.
+        Return the duration of the TextGrid in seconds.
 
         Returns
         -------
@@ -152,7 +145,7 @@ class TextGrid:
         --------
         >>> tg = mytextgrid.create_textgrid('banana', 0, 1.2)
         >>> tg.get_duration()
-        1.2
+            1.2
         """
         return self._xmax - self._xmin
 
@@ -168,6 +161,22 @@ class TextGrid:
             If True, insert an :class:`IntervalTier`. Otherwise, insert a :class:`PointTier`.
         index : int, default None, meaning the last index.
             The index of the tier.
+
+        Examples
+        --------
+        >>> tg = mytextgrid.create_textgrid('banana', 0, 1.2)
+
+        Insert an interval tier.
+
+        >>> tg.insert_tier('word')
+
+        To create a point tier, set ``interval_tier`` as ``False``.
+
+        >>> tg.insert_tier('tone', interval_tier = False)
+
+        With ``index``, you can insert a tier at a specific position.
+
+        >>> tg.insert_tier('phrase', index = 0)
 
         Returns
         -------
@@ -206,17 +215,17 @@ class TextGrid:
 
     def get_tier_by_name(self, tier_name):
         """
-        Return a list of tier objects with the specified name.
+        Return a list of tier objects with a specific name.
 
         Parameters
         ----------
         tier : str
-            The name of a tier stored in the TextGrid.
+            The name of a tier.
 
         Returns
         -------
-        list of tiers
-            A list of tiers that have the name.
+        list of class:`mytextgrid.core.tier.Tier`
+            A list of tiers objects
         """
         if not isinstance(tier_name, str):
             raise TypeError('tier MUST BE a str')
@@ -226,7 +235,7 @@ class TextGrid:
 
     def to_dict(self):
         """
-        Convert a TextGrid to a dict.
+        Convert a TextGrid into a dict.
         """
         tiers_list = []
         for tier in self._tiers:
@@ -264,12 +273,14 @@ class TextGrid:
 
     def write(self, path, short_format = False, encoding = 'utf-8'):
         """
-        Write TextGrid to a text file.
+        Write a TextGrid object as a text file.
 
         Parameters
         ----------
         path : str or :clas:`pathlib.Path`
             The path where the TextGrid file will be written.
+        short_format : bool, default False
+            ``True`` to output TextGrid file in long format. ``False`` for short format.
         encoding : str, default 'utf-8'
             The encoding of the file.
         """
@@ -277,7 +288,7 @@ class TextGrid:
 
     def write_as_json(self, *args, **kwds):
         """
-        Write TextGrid to a json file.
+        Write a TextGrid object as a JSON file.
 
         Parameters
         ----------

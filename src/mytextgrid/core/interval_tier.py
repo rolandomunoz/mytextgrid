@@ -6,19 +6,19 @@ decimal.getcontext().prec = 16
 
 class IntervalTier(Tier):
     """
-    A class representation for a interval tier.
+    A class representation for an interval tier.
     """
     def __init__(self, name = '', xmin = 0, xmax = 1):
         """
-        Initialize an instance of IntervalTier.
+        Initialize an instance of :class:`~mytextgrid.core.interval_tier.IntervalTier`.
 
         Parameters
         ----------
         name : str, default ''
             The name of the tier.
-        xmin : int, float str or decimal.Decimal
+        xmin : int, float str or :class:`decimal.Decimal`
             The starting time (in seconds) of the tier.
-        xmin : int, float str or decimal.Decimal
+        xmin : int, float str or :class:`decimal.Decimal`
             The ending time (in seconds) of the tier.
         """
         super().__init__(name, xmin, xmax, is_interval = True)
@@ -26,7 +26,8 @@ class IntervalTier(Tier):
 
     def insert_boundaries(self, *times):
         """
-        Insert one or more time boundaries into IntervalTier.
+        Insert one or more time boundaries into a
+        :class:`~mytextgrid.core.interval_tier.IntervalTier`.
 
         Parameters
         ----------
@@ -38,7 +39,7 @@ class IntervalTier(Tier):
 
     def insert_boundary(self, time):
         """
-        Insert a time boundary into IntervalTier.
+        Insert a time boundary into a :class:`~mytextgrid.core.interval_tier.IntervalTier`.
 
         Parameters
         ----------
@@ -84,7 +85,7 @@ class IntervalTier(Tier):
 
     def remove_boundary(self, time):
         """
-        Remove a time boundary from IntervalTier.
+        Remove a time boundary from a :class:`~mytextgrid.core.interval_tier.IntervalTier`.
 
         Parameters
         ----------
@@ -124,9 +125,9 @@ class IntervalTier(Tier):
 
         Parameters
         ----------
-        src_time : float or decimal.Decimal
+        src_time : float or :class:`decimal.Decimal`
             The time (in seconds) of an existing boundary.
-        dst_time : float or decimal.Decimal
+        dst_time : float or :class:`decimal.Decimal`
             The time (in seconds) where the boundary will be moved to.
 
         Raises
