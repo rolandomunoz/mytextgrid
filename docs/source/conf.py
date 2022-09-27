@@ -21,7 +21,7 @@ copyright = '2021-2022, Rolando Muñoz Aramburú'
 author = 'Rolando Muñoz Aramburú'
 
 # The full version, including alpha/beta/rc tags
-release = 'v0.5.0'
+release = 'v0.6.0'
 
 # -- General configuration ---------------------------------------------------
 
@@ -31,7 +31,7 @@ release = 'v0.5.0'
 extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage', 'sphinx.ext.napoleon']
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = []
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
