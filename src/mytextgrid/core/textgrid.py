@@ -277,7 +277,7 @@ class TextGrid:
 
         Parameters
         ----------
-        path : str or :clas:`pathlib.Path`
+        path : str or :class:`pathlib.Path`
             The path where the TextGrid file will be written.
         short_format : bool, default False
             ``True`` to output TextGrid file in long format. ``False`` for short format.
@@ -292,7 +292,7 @@ class TextGrid:
 
         Parameters
         ----------
-        path : str or :clas:`pathlib.Path`
+        path : str or :class:`pathlib.Path`
             The path where the JSON file will be written.
         encoding : str, default utf-8
             The encoding of the resulting file.
