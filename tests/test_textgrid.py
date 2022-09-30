@@ -41,6 +41,14 @@ class TestTextGrid(unittest.TestCase):
     def test_get_tier_by_name(self):
         self.assertEqual(len(self.textgrid.get_tier_by_name('word')), 3)
 
+        path_in = Path(__file__).parent / 'files' / 'empty_tier.TextGrid'
+        textgrid_new = read_from_file(path_in)
+
+        self.assertEqual(textgrid_new[0].name, '')
+        self.assertEqual(textgrid_new[1].name, ' luis')
+        self.assertEqual(textgrid_new[2].name, 'luis alberto')
+        self.assertEqual(textgrid_new[3].name, 'rolando ')
+
     def test_to_dict(self):
         a = self.textgrid.to_dict()
 
@@ -49,7 +57,8 @@ class TestTextGrid(unittest.TestCase):
 
         names = (
             'Mary_John_bell-2.TextGrid',
-            'Mary_John_bell-1.TextGrid'
+            'Mary_John_bell-1.TextGrid',
+            'empty_tier.TextGrid'
         )
         for name in names:
             path_in = files_dir / name
