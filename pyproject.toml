@@ -1,6 +1,68 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tgtranscription"
+version = "0.6.1"
+description = 'Create, read, modify and query TextGrid files.'
+readme = "README.md"
+requires-python = ">=3.7"
+license-files = { paths = ["LICENSE"] }
+keywords = [
+    "praat",
+    "TextGrid"
 ]
-build-backend = "setuptools.build_meta"
+authors = [
+  { name = "Rolando Muñoz Aramburú", email = "rolando.muar@gmail.com" },
+]
+classifiers = [
+  "Topic :: Text Processing :: Linguistic",
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Operating System :: OS Independent",
+  "Intended Audience :: Developers"
+]
+dependencies = [
+  "chardet==5.0.0",
+  "Jinja2==3.1.2",
+  "MarkupSafe==2.1.1"
+]
+
+[project.urls]
+Documentation = "https://mytextgrid.readthedocs.io/en/latest/index.html"
+Issues = "https://github.com/rolandomunoz/mytextGrid/issues"
+Source = "https://github.com/rolandomunoz/mytextgrid"
+
+[tool.hatch.envs.default]
+dependencies = [
+  "pytest",
+  "pytest-cov",
+]
+[tool.hatch.envs.default.scripts]
+cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=tgtranscription --cov=tests"
+no-cov = "cov --no-cov"
+
+[[tool.hatch.envs.test.matrix]]
+python = ["37", "38", "39", "310", "311"]
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.github",
+  "/docs",
+  "/tests"
+]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+omit = [
+  "mytextgrid/__about__.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
