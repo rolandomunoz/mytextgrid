@@ -225,7 +225,7 @@ def _parse_line(line):
         'tiers': re.compile(r'size = (?P<tiers>\d+) '),
         'tier_loc': re.compile(r' {4}item [(?P<tier_loc>\d+)]'),
         'tier_class': re.compile(' {8}class = "(?P<tier_class>.+)" '),
-        'tier_name': re.compile(' {8}name = "(?P<tier_name>.+)" '),
+        'tier_name': re.compile(' {8}name = "(?P<tier_name>.*)" '),
         'tier_xmin': re.compile(' {8}xmin = (?P<tier_xmin>.+) '),
         'tier_xmax': re.compile(' {8}xmax = (?P<tier_xmax>.+) '),
         'intervals': re.compile(r' {8}intervals: size = (?P<intervals>\d+) '),
