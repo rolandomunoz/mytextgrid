@@ -1,19 +1,44 @@
 """Parse TextGrid files in full text format into TextGrid objects"""
 import decimal
-import os
-import json
 import re
+from io import StringIO
+from pathlib import Path
 import chardet
 from mytextgrid.core.textgrid import TextGrid
 decimal.getcontext().prec = 16
 
-def textgrid_to_dict(path, encoding = None):
+def parse_textgrid_file(path, encoding = None):
     """
-    Parse a full text TextGrid file into a complex dict.
+    Parse a full text TextGrid file into a dict.
+
+    Parameters
+    ----------
+    path : str or :class:`pathlib.Path`
+        The path of the TextGrid file.
+    encoding : str or None, default None
+        The encoding of the TextGrid file. If None, the function will figure out
+        the encoding.
+    """
+    if isinstance(path, str):
+        path = Path(path)
+
+    # Open file
+    if encoding is None:
+        encoding = _detect_encoding(path)
+
+    with open(path, 'r', encoding = encoding) as file_object:
+        dict_ = parse(file_object)
+        dict_['basename'] = path.stem
+        dict_['path'] = path
+    return dict_
+
+def parse(stream, name = None, path = None):
+    """
+    Parse a full text TextGrid file into a dict.
 
     {
         'basename': str,
-        'path': str,
+        'path': :class:`pathlib.Path`,
         'xmin': str,
         'xmax': str,
         'tiers': [
@@ -34,114 +59,114 @@ def textgrid_to_dict(path, encoding = None):
             .
             .
             .
-            
         ]
     }
 
     Parameters
     ----------
-    path : str
-        The path of a full-formatted TextGrid file.
-    encoding : str, default None, detect automatically the encoding.
-        The name of the encoding used to decode the file. See the codecs module for the list
-        supported encodings.
+    stream : str or :class:`io.StringIO`
+        The content of a full-formatted TextGrid.
+    name : str
+        The name of the TextGrid
+    path : str or :class:`pathlib.Path`
+        The path of the TextGrid
 
     Returns
     -------
         dict
             A `dict` representation of the TextGrid file.
     """
-    basename = os.path.splitext(os.path.basename(path))[0]
+    if isinstance(stream, str):
+        stream = StringIO(stream)
+    if isinstance(path, str):
+        path = Path(path)
 
     textgrid = {
-        'basename':basename,
-        'path':path,
-        'xmin':None,
-        'xmax':None,
+        'basename': name,
+        'path': path,
+        'xmin': None,
+        'xmax': None,
         'tiers':[]
-        }
+    }
 
-    # Open file
-    if encoding is None:
-        encoding = _detect_encoding(path)
+    line = stream.readline()
+    while line:
+        key, match = _parse_line(line)
+        # Check header
+        if key == 'file_type':
+            file_type = match.group(key)
+            if not file_type == 'ooTextFile':
+                raise OSError('The stream is not a Praat object.')
 
-    with open(path, 'r', encoding = encoding) as file_object:
-        line = file_object.readline()
-        while line:
-            key, match = _parse_line(line)
-            # Check header
-            if key == 'file_type':
-                file_type = match.group(key)
-                if not file_type == 'ooTextFile':
-                    raise OSError(f'The file {path} is not a Praat object.')
+        if key == 'object_class':
+            object_class = match.group(key)
+            if not object_class == 'TextGrid':
+                raise OSError('The stream is not a TextGrid.')
 
-            if key == 'object_class':
-                object_class = match.group(key)
-                if not object_class == 'TextGrid':
-                    raise OSError(f'The file {path} is not a TextGrid.')
+        # TextGrid info
+        if key == 'tg_xmin':
+            textgrid['xmin'] = match.group(key)
 
-            # TextGrid info
-            if key == 'tg_xmin':
-                textgrid['xmin'] = match.group(key)
+        if key == 'tg_xmax':
+            textgrid['xmax'] = match.group(key)
 
-            if key == 'tg_xmax':
-                textgrid['xmax'] = match.group(key)
+        # Tier info
+        if key == 'tier_class':
+            textgrid['tiers'].append(
+                {
+                'class': match.group(key),
+                'tier_name':None,
+                'items': []
+                }
+            )
 
-            # Tier info
-            if key == 'tier_class':
-                textgrid['tiers'].append(
-                    {
-                    'class': match.group(key),
-                    'tier_name':None,
-                    'items': []
-                    })
+        if key == 'tier_name':
+            textgrid['tiers'][-1]['tier_name'] = match.group(key)
 
-            if key == 'tier_name':
-                textgrid['tiers'][-1]['tier_name'] = match.group(key)
+        # Item content
+        if key == 'interval_xmin':
+            textgrid['tiers'][-1]['items'].append(
+                {
+                'xmin': match.group(key),
+                'xmax': None,
+                'text': None
+                }
+            )
 
-            # Item content
-            if key == 'interval_xmin':
-                textgrid['tiers'][-1]['items'].append(
-                    {
-                    'xmin': match.group(key),
-                    'xmax': None,
-                    'text': None
-                    }
-                )
+        if key == 'interval_xmax':
+            textgrid['tiers'][-1]['items'][-1]['xmax'] = match.group(key)
 
-            if key == 'interval_xmax':
-                textgrid['tiers'][-1]['items'][-1]['xmax'] = match.group(key)
+        if key == 'point_number':
+            textgrid['tiers'][-1]['items'].append(
+                {'number':match.group(key),
+                'mark':None
+                }
+            )
 
-            if key == 'point_number':
-                textgrid['tiers'][-1]['items'].append(
-                    {'number':match.group(key),
-                    'mark':None
-                    })
+        if key in ('interval_text', 'point_mark'):
+            type_label = 'text' if key == 'interval_text' else 'mark'
+            text = match.group(key).replace('""', '"')
+            textgrid['tiers'][-1]['items'][-1][type_label] = text
 
-            if key == 'interval_text' or key == 'point_mark':
-                type_label = 'text' if key == 'interval_text' else 'mark'
-                text = match.group(key).replace('""', '"')
-                textgrid['tiers'][-1]['items'][-1][type_label] = text
+        # If the text or mark field has multiple lines, read the those
+        # lines until the last.
+        if key in ('interval_text2', 'point_mark2'):
+            text = match.group(key) + '\n'
+            enditem_pattern = re.compile('(.*)" $')
+            type_label = 'text' if key == 'interval_text2' else 'mark'
+            item = textgrid['tiers'][-1]['items'][-1]
 
-            # If the text or mark field has multiple lines, read the those
-            # lines until the last.
-            if key == 'interval_text2' or key == 'point_mark2':
-                text = match.group(key) + '\n'
-                enditem_pattern = re.compile('(.*)" $')
-                type_label = 'text' if key == 'interval_text2' else 'mark'
-                item = textgrid['tiers'][-1]['items'][-1]
-
-                while line:
-                    line = file_object.readline()
-                    match = enditem_pattern.match(line)
-                    if match:
-                        # Check the last character not to be a `"" \n`
-                        if not line.endswith('"" \n'):
-                            text = text + match.group(1)
-                            item[type_label] = text.replace('""', '"')
-                            break
-                    text = text + line
-            line = file_object.readline()
+            while line:
+                line = stream.readline()
+                match = enditem_pattern.match(line)
+                if match:
+                    # Check the last character not to be a `"" \n`
+                    if not line.endswith('"" \n'):
+                        text = text + match.group(1)
+                        item[type_label] = text.replace('""', '"')
+                        break
+                text = text + line
+        line = stream.readline()
     return textgrid
 
 def dict_to_textgrid(textgrid):
@@ -163,9 +188,7 @@ def dict_to_textgrid(textgrid):
     mytextgrid.Parser.full_textgrid_to_dict : Returns a dict formatted str created from a
     TextGrid file.
     """
-
     # Init TextGrid object
-
     textgrid_obj = TextGrid(
         xmin = decimal.Decimal(textgrid['xmin']),
         xmax = decimal.Decimal(textgrid['xmax'])
@@ -198,7 +221,6 @@ def dict_to_textgrid(textgrid):
                     decimal.Decimal(item['number']),
                     item['mark']
                 )
-
     return textgrid_obj
 
 def _parse_line(line):
