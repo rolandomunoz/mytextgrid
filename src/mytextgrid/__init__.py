@@ -3,4 +3,5 @@
 """
 from mytextgrid.core.textgrid import create_textgrid
 from mytextgrid.io.textgrid_in import read_from_file
+from mytextgrid.io.textgrid_in import read_from_stream
 from mytextgrid.core.textgrid import TextGrid
