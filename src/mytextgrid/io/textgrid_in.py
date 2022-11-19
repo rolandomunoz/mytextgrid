@@ -21,7 +21,7 @@ def read_from_file(path, encoding = None):
     textgrid_obj = fulltext_format.dict_to_textgrid(textgrid_dict)
     return textgrid_obj
 
-def read_from_stream(stram, name, path):
+def read_from_stream(*args, **kwds):
     """
     Read a stream into a TextGrid object.
 
