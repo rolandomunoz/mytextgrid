@@ -6,6 +6,7 @@ from decimal import getcontext
 mytextgrid_path = str(pathlib.Path(__file__).parent.parent.joinpath('src'))
 sys.path.insert(0, mytextgrid_path)
 from mytextgrid.core.point_tier import Point
+from mytextgrid.core.point_tier import PointTier
 getcontext().prec = 16
 
 class Testpoint(unittest.TestCase):
@@ -14,7 +15,7 @@ class Testpoint(unittest.TestCase):
     """
     def setUp(self):
         time = Decimal('5.145')
-        self.point = Point(time, 'H')
+        self.point = Point(PointTier(), time, 'H')
 
     def test_init(self):
         point = self.point

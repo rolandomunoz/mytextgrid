@@ -8,13 +8,14 @@ getcontext().prec = 16
 mytextgrid_path = str(pathlib.Path(__file__).parent.parent.joinpath('src'))
 sys.path.insert(0, mytextgrid_path)
 from mytextgrid.core.interval_tier import Interval
+from mytextgrid.core.interval_tier import IntervalTier
 
 class TestInterval(unittest.TestCase):
 
     def test_init(self):
         start = Decimal('5.145')
         end = Decimal('6.324')
-        interval = Interval(start, end, 'perro')
+        interval = Interval(IntervalTier(), start, end, 'perro')
 
         self.assertEqual(interval.xmin, start)
         self.assertEqual(interval.xmax, end)
