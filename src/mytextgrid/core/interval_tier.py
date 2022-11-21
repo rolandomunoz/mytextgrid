@@ -22,7 +22,7 @@ class IntervalTier(Tier):
             The ending time (in seconds) of the tier.
         """
         super().__init__(name, xmin, xmax, is_interval = True)
-        self._items = [Interval(self._xmin, self._xmax)]
+        self._items = [Interval(self, self._xmin, self._xmax)]
 
     def insert_boundaries(self, *times):
         """
@@ -66,12 +66,14 @@ class IntervalTier(Tier):
             raise ValueError(f'There is already a boundary at {time_}')
 
         new_left_interval = Interval(
+            self,
             xmin = old_interval.xmin,
             xmax = time_,
             text = old_interval.text
         )
 
         new_right_interval = Interval(
+            self,
             xmin = time_,
             xmax = old_interval.xmax
         )
@@ -109,6 +111,7 @@ class IntervalTier(Tier):
 
         # Create and insert new interval
         new_interval  = Interval(
+            self,
             xmin = interval_left.xmin,
             xmax = interval_right.xmax,
             text = interval_left.text + interval_right.text
@@ -159,12 +162,14 @@ class IntervalTier(Tier):
 
         # Create intervals objects and replace them.
         new_left_interval = Interval(
+            self,
             xmin = left_interval.xmin,
             xmax = dst_time_,
             text = left_interval.text
         )
 
         new_right_interval = Interval(
+            self,
             xmin = dst_time_,
             xmax = right_interval.xmax,
             text = right_interval.text
@@ -273,20 +278,24 @@ class Interval:
     """
     A class representation for an interval.
     """
-    def __init__(self, xmin, xmax, text = ''):
+    def __init__(self, parent, xmin, xmax, text = ''):
         """
         Init an object representing a Praat interval.
 
         Parameters
         ----------
+        parent: :class:`mytextgrid.core.IntervalTier`
+            The parent tier.
         xmin : int, float str or decimal.Decimal
             The starting time (in seconds) of the interval.
         xmin : int, float str or decimal.Decimal
             The ending time (in seconds) of the interval.
         text : str, default ''
-            The text content of the interval.
+            The text content.
         """
         # Check input type
+        if not isinstance(parent, IntervalTier):
+            raise TypeError('parent MUST BE AN IntervalTier')
         if not isinstance(text, str):
             raise TypeError('text MUST BE a str.')
         if not isinstance(xmin, (int, float, str, decimal.Decimal)):
@@ -300,6 +309,7 @@ class Interval:
         assert xmax_ > xmin_, 'xmax MUST BE greater than xmin'
 
         # Assign attributes
+        self.parent = parent
         self._xmin = xmin_
         self._xmax = xmax_
         self._text = text
