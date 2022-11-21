@@ -29,7 +29,7 @@ class PointTier(Tier):
         if not index is None:
             raise ValueError(f'Cannot insert a Point at {time}.')
 
-        point = Point(time_, text)
+        point = Point(self, time_, text)
         self._items.append(point)
         self._items.sort(key=lambda x:x.time)
 
@@ -99,14 +99,30 @@ class PointTier(Tier):
 class Point:
     """Represent a Point object which is the minimal unit of a PointTier object"""
 
-    def __init__(self, time, text = ''):
+    def __init__(self, parent, time, text = ''):
+        """
+        Init a Point.
 
+        Parameters
+        ----------
+        parent: :class:`mytextgrid.core.PointTier`
+            The parent tier.
+        xmin : int, float str or decimal.Decimal
+            The starting time (in seconds) of the interval.
+        xmin : int, float str or decimal.Decimal
+            The ending time (in seconds) of the interval.
+        text : str, default ''
+            The text content.
+        """
         # Check input type
+        if not isinstance(parent, PointTier):
+            raise TypeError('parent MUST BE A PointTier')
         if not isinstance(time, (int, float, str, decimal.Decimal)):
             raise TypeError('time MUST BE an int, float, str or decimal.Decimal.')
         if not isinstance(text, str):
             raise TypeError('text MUST BE a str.')
 
+        self.parent = parent
         self._time = obj_to_decimal(time)
         self._text = text
 
