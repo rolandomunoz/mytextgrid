@@ -1,15 +1,18 @@
 """Create and manipulate point tiers objects"""
 import decimal
+
 from mytextgrid.core.tier import Tier
 from mytextgrid.eval import obj_to_decimal
+
 decimal.getcontext().prec = 16
 
 class PointTier(Tier):
     """
     Represent a tier that contains Point objects.
     """
-    def __init__(self, name = '', xmin = 0, xmax = 1):
-        super().__init__(name, xmin, xmax, is_interval = False)
+    def __init__(self, name = '', xmin = 0, xmax = 1, textgrid = None):
+        is_interval = False
+        super().__init__(name, xmin, xmax, is_interval, textgrid)
 
     def insert_point(self, time, text = ''):
         """
@@ -29,7 +32,7 @@ class PointTier(Tier):
         if not index is None:
             raise ValueError(f'Cannot insert a Point at {time}.')
 
-        point = Point(self, time_, text)
+        point = Point(time_, text, self)
         self._items.append(point)
         self._items.sort(key=lambda x:x.time)
 
@@ -99,32 +102,32 @@ class PointTier(Tier):
 class Point:
     """Represent a Point object which is the minimal unit of a PointTier object"""
 
-    def __init__(self, parent, time, text = ''):
+    def __init__(self, time, text = '', tier = None):
         """
         Init a Point.
 
         Parameters
         ----------
-        parent: :class:`mytextgrid.core.PointTier`
-            The parent tier.
         xmin : int, float str or decimal.Decimal
             The starting time (in seconds) of the interval.
         xmin : int, float str or decimal.Decimal
             The ending time (in seconds) of the interval.
         text : str, default ''
             The text content.
+        tier: :class:`mytextgrid.core.PointTier`
+            The parent tier.
         """
         # Check input type
-        if not isinstance(parent, PointTier):
-            raise TypeError('parent MUST BE A PointTier')
         if not isinstance(time, (int, float, str, decimal.Decimal)):
             raise TypeError('time MUST BE an int, float, str or decimal.Decimal.')
         if not isinstance(text, str):
             raise TypeError('text MUST BE a str.')
+        if not isinstance(tier, PointTier):
+            raise TypeError('parent MUST BE A PointTier')
 
-        self.parent = parent
         self._time = obj_to_decimal(time)
         self._text = text
+        self._tier = tier
 
     @property
     def time(self):
@@ -162,3 +165,19 @@ class Point:
         if not isinstance(value, str):
             raise TypeError('text MUST BE a str')
         self._text = value
+
+    def tier(self):
+        """
+        Return the :class:`~mytextgrid.core.interval_tier.IntervalTier` parent or `None`.
+        """
+        return self._tier
+
+    def textgrid(self):
+        """
+        Return the :class:`~mytextgrid.core.textgrid.TextGrid` parent or `None`.
+        """
+        tier = self.tier()
+        if tier is None:
+            return None
+        return tier.textgrid()
+
