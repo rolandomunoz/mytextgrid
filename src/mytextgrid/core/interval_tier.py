@@ -1,7 +1,10 @@
 """Create and manipulate `Interval` and `IntervalTier` objects."""
 import decimal
+from warnings import deprecated
+
 from mytextgrid.core.tier import Tier
 from mytextgrid.eval import obj_to_decimal
+
 decimal.getcontext().prec = 16
 
 class IntervalTier(Tier):
@@ -22,7 +25,7 @@ class IntervalTier(Tier):
             The ending time (in seconds) of the tier.
         """
         super().__init__(name, xmin, xmax, is_interval = True)
-        self._items = [Interval(self, self._xmin, self._xmax)]
+        self._items = [Interval(self._xmin, self._xmax, '', self)]
 
     def insert_boundaries(self, *times):
         """
@@ -278,30 +281,30 @@ class Interval:
     """
     A class representation for an interval.
     """
-    def __init__(self, parent, xmin, xmax, text = ''):
+    def __init__(self, xmin, xmax, text = '', tier = None):
         """
         Init an object representing a Praat interval.
 
         Parameters
         ----------
-        parent: :class:`mytextgrid.core.IntervalTier`
-            The parent tier.
         xmin : int, float str or decimal.Decimal
             The starting time (in seconds) of the interval.
-        xmin : int, float str or decimal.Decimal
+        xmax : int, float str or decimal.Decimal
             The ending time (in seconds) of the interval.
         text : str, default ''
             The text content.
+        tier: :class:`mytextgrid.core.IntervalTier`
+            The parent tier.
         """
         # Check input type
-        if not isinstance(parent, IntervalTier):
-            raise TypeError('parent MUST BE AN IntervalTier')
-        if not isinstance(text, str):
-            raise TypeError('text MUST BE a str.')
         if not isinstance(xmin, (int, float, str, decimal.Decimal)):
             raise TypeError('xmin MUST BE an int, float, str or decimal.Decimal.')
         if not isinstance(xmax, (int, float, str, decimal.Decimal)):
             raise TypeError('xmax MUST BE an int, float, str or decimal.Decimal.')
+        if not isinstance(text, str):
+            raise TypeError('text MUST BE a str.')
+        if not isinstance(tier, IntervalTier):
+            raise TypeError('tier MUST BE AN IntervalTier')
 
         xmin_ = obj_to_decimal(xmin)
         xmax_ = obj_to_decimal(xmax)
@@ -309,7 +312,7 @@ class Interval:
         assert xmax_ > xmin_, 'xmax MUST BE greater than xmin'
 
         # Assign attributes
-        self.parent = parent
+        self._tier = tier
         self._xmin = xmin_
         self._xmax = xmax_
         self._text = text
@@ -344,6 +347,7 @@ class Interval:
             raise TypeError('text MUST BE a str')
         self._text = value
 
+    @deprecated('Use duration instead')
     def get_duration(self):
         """
         Return the duration of the interval.
@@ -354,3 +358,29 @@ class Interval:
             The duration of the interval.
         """
         return self._xmax - self._xmin
+
+    def duration(self):
+        """
+        Return the duration of the interval.
+
+        Return
+        ------
+        :class:`decimal.Decimal`
+            The duration of the interval.
+        """
+        return self._xmax - self._xmin
+
+    def tier(self):
+        """
+        Return the :class:`~mytextgrid.core.interval_tier.IntervalTier` parent.
+        """
+        return self._tier
+
+    def textgrid(self):
+        """
+        Return the :class:`~mytextgrid.core.textgrid.IntervalTier` parent.
+        """
+        tier = self.tier()
+        if tier is None:
+            return None
+        return tier.textgrid()
