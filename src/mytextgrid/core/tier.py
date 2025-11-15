@@ -1,6 +1,9 @@
 """Create and manipulate tier objects"""
 import decimal
+from warnings import deprecated
+
 from mytextgrid.eval import obj_to_decimal
+
 decimal.getcontext().prec = 16
 
 class Tier:
@@ -8,7 +11,7 @@ class Tier:
     This is a base class for :class:`IntervalTier` and
     :class:`PointTier classes`. It represents an item's container.
     """
-    def __init__(self, name = '', xmin = 0, xmax = 1, is_interval = True):
+    def __init__(self, name = '', xmin = 0, xmax = 1, is_interval = True, textgrid = None):
         """
         A base class to build a Interval or Point tier.
 
@@ -22,6 +25,8 @@ class Tier:
             The ending time (in seconds) of the tier.
         is_interval : bool, defaul True
             True is it is an Interval tier. False if it's a Point tier.
+        textgrid : :class:`mytextgrid.core.textgrid.TextGrid` or None
+            The containing TextGrid object.
         """
         # Check input type
         if not isinstance(name, str):
@@ -42,6 +47,7 @@ class Tier:
         self._xmin = xmin_
         self._xmax = xmax_
         self._is_interval = is_interval
+        self._textgrid = textgrid
         self._items = []
 
     def __len__(self):
@@ -81,7 +87,11 @@ class Tier:
         """
         return self._items
 
+    @deprecated('Use duration instead')
     def get_duration(self):
+        return duration()
+
+    def duration(self):
         """
         Return the duration (in seconds) of the Tier instance.
 
@@ -115,3 +125,7 @@ class Tier:
             raise ValueError(f'{time_} seconds is at the left edge of the tier {self._name}.')
         if self._xmax == time_:
             raise ValueError(f'{time_} seconds is at the right edge of the tier {self._name}.')
+
+    def textgrid(self):
+        return self._textgrid
+
