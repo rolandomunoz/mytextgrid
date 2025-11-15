@@ -15,7 +15,7 @@ class Testpoint(unittest.TestCase):
     """
     def setUp(self):
         time = Decimal('5.145')
-        self.point = Point(PointTier(), time, 'H')
+        self.point = Point(time, 'H', PointTier())
 
     def test_init(self):
         point = self.point
