@@ -374,13 +374,13 @@ class Interval:
 
     def tier(self):
         """
-        Return the :class:`~mytextgrid.core.interval_tier.IntervalTier` parent.
+        Return the :class:`~mytextgrid.core.interval_tier.IntervalTier` parent or `None`.
         """
         return self._tier
 
     def textgrid(self):
         """
-        Return the :class:`~mytextgrid.core.textgrid.IntervalTier` parent.
+        Return the :class:`~mytextgrid.core.textgrid.TextGrid` parent or `None`.
         """
         tier = self.tier()
         if tier is None:
