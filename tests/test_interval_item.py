@@ -15,7 +15,8 @@ class TestInterval(unittest.TestCase):
     def test_init(self):
         start = Decimal('5.145')
         end = Decimal('6.324')
-        interval = Interval(IntervalTier(), start, end, 'perro')
+        interval_tier = IntervalTier()
+        interval = Interval(start, end, 'perro', interval_tier)
 
         self.assertEqual(interval.xmin, start)
         self.assertEqual(interval.xmax, end)
