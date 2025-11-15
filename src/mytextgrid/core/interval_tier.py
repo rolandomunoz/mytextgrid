@@ -11,7 +11,7 @@ class IntervalTier(Tier):
     """
     A class representation for an interval tier.
     """
-    def __init__(self, name = '', xmin = 0, xmax = 1):
+    def __init__(self, name = '', xmin = 0, xmax = 1, textgrid = None):
         """
         Initialize an instance of :class:`~mytextgrid.core.interval_tier.IntervalTier`.
 
@@ -24,7 +24,8 @@ class IntervalTier(Tier):
         xmin : int, float str or :class:`decimal.Decimal`
             The ending time (in seconds) of the tier.
         """
-        super().__init__(name, xmin, xmax, is_interval = True)
+        is_interval = True
+        super().__init__(name, xmin, xmax, is_interval, textgrid)
         self._items = [Interval(self._xmin, self._xmax, '', self)]
 
     def insert_boundaries(self, *times):
@@ -69,16 +70,17 @@ class IntervalTier(Tier):
             raise ValueError(f'There is already a boundary at {time_}')
 
         new_left_interval = Interval(
-            self,
-            xmin = old_interval.xmin,
-            xmax = time_,
-            text = old_interval.text
+            old_interval.xmin, # xmin
+            time_, # xmax
+            old_interval.text, # text
+            self, # textgrid parent
         )
 
         new_right_interval = Interval(
-            self,
-            xmin = time_,
-            xmax = old_interval.xmax
+            time_, # xmin
+            old_interval.xmax, #xmax
+            '', # text
+            self, # textgrid parent
         )
 
         # Update items
