@@ -2,10 +2,13 @@
 Create and manipulate TextGrid objects.
 """
 import decimal
+from warning import deprecated
+
 from mytextgrid.io import textgrid_out
 from mytextgrid.core.interval_tier import IntervalTier
 from mytextgrid.core.point_tier import PointTier
 from mytextgrid.eval import obj_to_decimal
+
 decimal.getcontext().prec = 16
 
 def create_textgrid(xmin = 0, xmax = 1):
@@ -102,8 +105,8 @@ class TextGrid:
                 Ending time (sec):     1
                 Number of tiers:       2
             Tiers Summary:
-            0	TextTier	tone	(size = 2)
-            1	IntervalTier	segment	(size = 8)
+            0   TextTier    tone    (size = 2)
+            1   IntervalTier    segment (size = 8)
         """
         size = len(self._tiers)
 
@@ -132,7 +135,11 @@ class TextGrid:
             )
         print(message)
 
+    @deprecated('Use duration instead')
     def get_duration(self):
+        return self.duration()
+
+    def duration(self):
         """
         Return the duration of the TextGrid in seconds.
 
