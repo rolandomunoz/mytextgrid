@@ -4,23 +4,32 @@ from pathlib import Path
 from copy import copy
 from decimal import Decimal
 from decimal import getcontext
+
 mytextgrid_path = str(Path(__file__).parent.parent.joinpath('src'))
 sys.path.insert(0, mytextgrid_path)
 from mytextgrid import create_textgrid
 from mytextgrid import read_from_file
 from mytextgrid.io.textgrid_out import textgrid_to_json
+
 getcontext().prec = 16
 
 class TestTextGrid(unittest.TestCase):
 
     def setUp(self):
         self.textgrid = create_textgrid(0, 1)
-        self.textgrid.insert_tier('phon')
+        phon_tier = self.textgrid.insert_tier('phon')
         self.textgrid.insert_tier('word')
         self.textgrid.insert_tier('word', False)
         self.textgrid.insert_tier('word')
         self.textgrid.insert_tier('phrase', False, -10)
         self.textgrid.insert_tier('comments about word')
+
+        lindex, _ = phon_tier.insert_boundary(0.1)
+        phon_tier.insert_boundary(0.2)
+        phon_tier.insert_boundary(0.3)
+        phon_tier.insert_boundary(0.4)
+
+        phon_tier.set_text_at_index(lindex, 'a', 'b', 'c', 'd')
 
     def test_init(self):
         textgrid = create_textgrid(0, 1)
@@ -36,7 +45,7 @@ class TestTextGrid(unittest.TestCase):
             self.textgrid.tiers = []
 
     def test_get_duration(self):
-        self.assertEqual(self.textgrid.get_duration(), 1)
+        self.assertEqual(self.textgrid.duration(), 1)
 
     def test_get_tier_by_name(self):
         self.assertEqual(len(self.textgrid.get_tier_by_name('word')), 3)
@@ -71,6 +80,18 @@ class TestTextGrid(unittest.TestCase):
 
         tg = create_textgrid(0, 10)
         tg.write(files_dir / 'empty.TextGrid')
+
+    def test_parent_child_item(self):
+        """
+        Verify that the interval and point items return their textgrid
+        and tier container.
+        """
+        for tier in self.textgrid:
+            textgrid = tier.textgrid()
+            self.assertEqual(self.textgrid, textgrid)
+            for item in tier:
+                self.assertEqual(item.tier(), tier)
+                self.assertEqual(item.textgrid(), self.textgrid)
 
 if __name__ == '__main__':
     unittest.main()
