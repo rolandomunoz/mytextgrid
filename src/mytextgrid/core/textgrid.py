@@ -169,6 +169,11 @@ class TextGrid:
         index : int, default None, meaning the last index.
             The index of the tier.
 
+        Returns
+        -------
+        :class:`IntervalTier` or :class:`PointTier`
+            An empty tier.
+
         Examples
         --------
         >>> tg = mytextgrid.create_textgrid('banana', 0, 1.2)
@@ -184,11 +189,6 @@ class TextGrid:
         With ``index``, you can insert a tier at a specific position.
 
         >>> tg.insert_tier('phrase', index = 0)
-
-        Returns
-        -------
-        :class:`IntervalTier` or :class:`PointTier`
-            An empty tier.
         """
         if index is None:
             index = len(self)
