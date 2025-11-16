@@ -197,9 +197,9 @@ class TextGrid:
             raise ValueError('index MUST BE a int value.')
 
         if interval_tier:
-            tier = IntervalTier(name, self._xmin, self._xmax)
+            tier = IntervalTier(name, self._xmin, self._xmax, self)
         else:
-            tier = PointTier(name, self._xmin, self._xmax)
+            tier = PointTier(name, self._xmin, self._xmax, self)
         self.tiers.insert(index, tier)
 
         return tier
