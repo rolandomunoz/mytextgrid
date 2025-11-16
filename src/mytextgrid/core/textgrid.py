@@ -2,7 +2,7 @@
 Create and manipulate TextGrid objects.
 """
 import decimal
-from warning import deprecated
+from warnings import deprecated
 
 from mytextgrid.io import textgrid_out
 from mytextgrid.core.interval_tier import IntervalTier
