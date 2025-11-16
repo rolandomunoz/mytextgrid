@@ -11,7 +11,7 @@ The following tutorial will walk you through the basics. For more information, v
 You can get the lastest release of this package using the `pip` installer:
 
 ```
-pip install mytextgrid -U
+pip install -U mytextgrid
 ```
 
 After that, you can import the package as in the following line.
