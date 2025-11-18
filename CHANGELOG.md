@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- The **LICENSE** has been changed from **GPL** to **MIT**.
+
+## [0.9.0] - 2025-11-17
+
 ### Added
 
 - Interval and Point now include `tier()` and `textgrid()` methods.
@@ -16,7 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Rename the parameter **parent** as **textgrid** in Interval and Point classes.
 - Move the `textgrid` parameter to the last position in `__init__`.
-- The **LICENSE** has been changed from **GPL** to **MIT**.
 
 ###  Removed
 
