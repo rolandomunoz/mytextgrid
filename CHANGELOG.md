@@ -18,9 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move the `textgrid` parameter to the last position in `__init__`.
 - The **LICENSE** has been changed from **GPL** to **MIT**.
 
-###  Depracated
+###  Removed
 
-- The `get_durations()` method is deprecated and will be removed in a future release.
+- The `get_durations()` method is removed. Use `duration()` instead.
 
 ## [0.8.0] - 2022-11-21
 
