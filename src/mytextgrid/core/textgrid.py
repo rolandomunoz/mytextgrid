@@ -2,7 +2,6 @@
 Create and manipulate TextGrid objects.
 """
 import decimal
-from warnings import deprecated
 
 from mytextgrid.io import textgrid_out
 from mytextgrid.core.interval_tier import IntervalTier
@@ -134,10 +133,6 @@ class TextGrid:
             f'{summary_str}'
             )
         print(message)
-
-    @deprecated('Use duration instead')
-    def get_duration(self):
-        return self.duration()
 
     def duration(self):
         """

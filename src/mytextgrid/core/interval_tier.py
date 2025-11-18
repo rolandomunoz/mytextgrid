@@ -1,6 +1,5 @@
 """Create and manipulate `Interval` and `IntervalTier` objects."""
 import decimal
-from warnings import deprecated
 
 from mytextgrid.core.tier import Tier
 from mytextgrid.eval import obj_to_decimal
@@ -348,18 +347,6 @@ class Interval:
         if not isinstance(value, str):
             raise TypeError('text MUST BE a str')
         self._text = value
-
-    @deprecated('Use duration instead')
-    def get_duration(self):
-        """
-        Return the duration of the interval.
-
-        Return
-        ------
-        :class:`decimal.Decimal`
-            The duration of the interval.
-        """
-        return self._xmax - self._xmin
 
     def duration(self):
         """

@@ -1,6 +1,5 @@
 """Create and manipulate tier objects"""
 import decimal
-from warnings import deprecated
 
 from mytextgrid.eval import obj_to_decimal
 
@@ -86,10 +85,6 @@ class Tier:
         Return the `self._items` attribute.
         """
         return self._items
-
-    @deprecated('Use duration instead')
-    def get_duration(self):
-        return duration()
 
     def duration(self):
         """
