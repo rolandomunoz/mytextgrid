@@ -47,7 +47,7 @@ cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=mytext
 no-cov = "cov --no-cov"
 
 [[tool.hatch.envs.test.matrix]]
-python = ["37", "38", "39", "310", "311"]
+python = ["37", "38", "39", "310", "311", "312", "313"]
 
 [tool.hatch.build.targets.sdist]
 exclude = [
