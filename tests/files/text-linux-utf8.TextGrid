@@ -1,0 +1,28 @@
+File type = "ooTextFile"
+Object class = "TextGrid"
+
+xmin = 0 
+xmax = 1 
+tiers? <exists> 
+size = 2 
+item []: 
+    item [1]:
+        class = "IntervalTier" 
+        name = "a" 
+        xmin = 0 
+        xmax = 1 
+        intervals: size = 1 
+        intervals [1]:
+            xmin = 0 
+            xmax = 1 
+            text = "!\""#$%&'()*+,-./0123456789:;<=>?@ ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_ abcdefghijklmnopqrstuvwxyz{|}~" 
+    item [2]:
+        class = "IntervalTier" 
+        name = "b" 
+        xmin = 0 
+        xmax = 1 
+        intervals: size = 1 
+        intervals [1]:
+            xmin = 0 
+            xmax = 1 
+            text = "rolando muñoz aramburú" 
