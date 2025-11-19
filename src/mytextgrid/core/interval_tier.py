@@ -2,7 +2,7 @@
 import decimal
 
 from mytextgrid.core.tier import Tier
-from mytextgrid.eval import obj_to_decimal
+from mytextgrid.utils import obj_to_decimal
 
 decimal.getcontext().prec = 16
 
@@ -68,19 +68,11 @@ class IntervalTier(Tier):
         if old_interval.xmin == time_:
             raise ValueError(f'There is already a boundary at {time_}')
 
-        new_left_interval = Interval(
-            old_interval.xmin, # xmin
-            time_, # xmax
-            old_interval.text, # text
-            self, # textgrid parent
-        )
+        new_left_interval = Interval(old_interval.xmin, time_,
+                                     old_interval.text, self)
 
-        new_right_interval = Interval(
-            time_, # xmin
-            old_interval.xmax, #xmax
-            '', # text
-            self, # textgrid parent
-        )
+        new_right_interval = Interval(time_,
+                                      old_interval.xmax, '', self)
 
         # Update items
         self._items[index] = new_left_interval
@@ -114,12 +106,9 @@ class IntervalTier(Tier):
         interval_right = self._items[index]
 
         # Create and insert new interval
-        new_interval  = Interval(
-            self,
-            xmin = interval_left.xmin,
-            xmax = interval_right.xmax,
-            text = interval_left.text + interval_right.text
-        )
+        new_interval  = Interval(interval_left.xmin, interval_right.xmax,
+                                 interval_left.text + interval_right.text,
+                                 self)
 
         # Update items
         self._items[index] = new_interval
@@ -165,19 +154,11 @@ class IntervalTier(Tier):
             raise ValueError('Cannot move the source boundary outside its neighbors boundaries.')
 
         # Create intervals objects and replace them.
-        new_left_interval = Interval(
-            self,
-            xmin = left_interval.xmin,
-            xmax = dst_time_,
-            text = left_interval.text
-        )
+        new_left_interval = Interval(left_interval.xmin, dst_time_,
+                                     left_interval.text, self)
 
-        new_right_interval = Interval(
-            self,
-            xmin = dst_time_,
-            xmax = right_interval.xmax,
-            text = right_interval.text
-        )
+        new_right_interval = Interval(dst_time_, right_interval.xmax,
+                                      right_interval.text, self)
 
         # Update items
         self._items[index-1] = new_left_interval
