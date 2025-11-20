@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - IntervalTier.move_boundary() and IntervalTier.inset_boundary() work again
 
+### Modified
+
+- Rename function `read_from_stream` to `read_textgrid_from_stream`
+
 ### Changed
 
 - The **LICENSE** has been changed from **GPL** to **MIT**.
