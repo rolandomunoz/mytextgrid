@@ -23,14 +23,14 @@ import mytextgrid
 ### 2. The basics
 
 ## Reading a TextGrid from a file
-To read an existing TextGrid file use the `read_from_file()` function. TextGrid files come in [three formats](https://www.fon.hum.uva.nl/praat/manual/TextGrid_file_formats.html): long, short and binary. At this moment, only the long format is supported. 
+To read an existing TextGrid file use the `read_textgrid()` function. TextGrid files come in [three formats](https://www.fon.hum.uva.nl/praat/manual/TextGrid_file_formats.html): long, short and binary. At this moment, only the long format is supported. 
 
 ```
 import mytextgrid
 
 # Read TextGrid
 >>> path = r'C:\Users\rolan\Documents\projects\Mary_John_bell.TextGrid'
->>> tg = mytextgrid.read_from_file(path)
+>>> tg = mytextgrid.read_textgrid(path)
 ```
 
 ## Describe a TextGrid
