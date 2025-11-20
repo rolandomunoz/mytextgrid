@@ -131,3 +131,4 @@ dmypy.json
 # My own
 token.txt
 examples
+tests/results
