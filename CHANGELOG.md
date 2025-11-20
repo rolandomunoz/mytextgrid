@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Read TextGrid file in short format
+- Read TextGrid file in binary
+
+### Fixed
+
+- IntervalTier.move_boundary() and IntervalTier.inset_boundary() work again
+
 ### Changed
 
 - The **LICENSE** has been changed from **GPL** to **MIT**.
