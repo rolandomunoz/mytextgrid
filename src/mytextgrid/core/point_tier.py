@@ -1,12 +1,12 @@
 """Create and manipulate point tiers objects"""
 import decimal
 
-from mytextgrid.core.tier import Tier
-from mytextgrid.eval import obj_to_decimal
+from mytextgrid.core.tier_abstract import TierAbstract
+from mytextgrid.utils import obj_to_decimal
 
 decimal.getcontext().prec = 16
 
-class PointTier(Tier):
+class PointTier(TierAbstract):
     """
     Represent a tier that contains Point objects.
     """
