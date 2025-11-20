@@ -1,5 +1,6 @@
 import sys
 import unittest
+import hashlib
 from pathlib import Path
 from copy import copy
 from decimal import Decimal
@@ -63,6 +64,8 @@ class TestTextGrid(unittest.TestCase):
 
     def test_write_files(self):
         files_dir = Path(__file__).parent / 'files'
+        output_dir = files_dir.parent / 'results'
+        output_dir.mkdir(parents=True, exist_ok=True)
 
         names = (
             'Mary_John_bell-2.TextGrid',
@@ -71,15 +74,19 @@ class TestTextGrid(unittest.TestCase):
         )
         for name in names:
             path_in = files_dir / name
-            path_out = files_dir.joinpath(name).with_suffix('.TextGrid.out')
-            json_out = files_dir.joinpath(name).with_suffix('.TextGrid.json')
+            path_out = output_dir.joinpath(name).with_suffix('.TextGrid')
+            json_out = output_dir.joinpath(name).with_suffix('.json')
 
             textgrid_new = read_textgrid(path_in)
             textgrid_new.write(path_out)
             textgrid_new.write_as_json(json_out)
 
+            a = calculate_sha256(path_in)
+            b = calculate_sha256(path_out)
+            print(a == b)
+
         tg = create_textgrid(0, 10)
-        tg.write(files_dir / 'empty.TextGrid')
+        tg.write(output_dir / 'empty.TextGrid')
 
     def test_parent_child_item(self):
         """
@@ -92,6 +99,11 @@ class TestTextGrid(unittest.TestCase):
             for item in tier:
                 self.assertEqual(item.tier(), tier)
                 self.assertEqual(item.textgrid(), self.textgrid)
+
+def calculate_sha256(path):
+    with open(path, 'rb') as f:
+        digest = hashlib.file_digest(f, 'sha256')
+    return digest.hexdigest()
 
 if __name__ == '__main__':
     unittest.main()
