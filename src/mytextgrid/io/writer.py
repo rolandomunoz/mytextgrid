@@ -3,42 +3,89 @@ Export TextGrid files to other formats
 """
 import csv
 import json
-from decimal import Decimal
-from jinja2 import Environment, PackageLoader, select_autoescape
 from pathlib import Path
+from decimal import Decimal
 
-def textgrid_to_text_file(textgrid_obj, dst_path, short_format = False, encoding = 'utf-8'):
+from jinja2 import Environment, PackageLoader, select_autoescape
+
+
+env = Environment(
+    loader=PackageLoader('mytextgrid.io'),
+    autoescape=select_autoescape()
+)
+env.trim_blocks = True
+env.lstrip_blocks  = True
+
+def write_textgrid(textgrid_obj, filepath, format_ = 'long', encoding = 'utf-8'):
     """
     Write a TextGrid object to a text file.
 
     Parameters
     ----------
-    textgrid_obj : 
+    textgrid_obj :
         A TextGrid object.
-    dst_path : str or :class:`pathlib.Path`
+    filepath : str or :class:`pathlib.Path`
         The path where the text file will be stored.
-    short_format : boolean, default `False`
-        True for short format of the text file. Otherwirse, long format is applied.
+    format_ : {'long', 'short', 'binary'}
+        The output format of the file.
     encoding: str, default 'utf-8'
         The encoding of the text file.
     """
-    env = Environment(
-        loader=PackageLoader('mytextgrid.io'),
-        autoescape=select_autoescape()
-    )
-    env.trim_blocks = True
-    env.lstrip_blocks  = True
+    if format_ == 'long':
+        write_long(textgrid_obj, filepath, encoding)
+    elif format_ == 'short':
+        write_short(textgrid_obj, filepath, encoding)
+    elif format == 'binary':
+        write_binary(textgrid_obj, filepath)
 
-    # Variales
+def write_long(textgrid_obj, dst_path, encoding = 'utf-8'):
+    """
+    Write a TextGrid object to a text file in long-format.
+
+    Parameters
+    ----------
+    textgrid_obj :
+        A TextGrid object.
+    dst_path : str or :class:`pathlib.Path`
+        The path where the text file will be stored.
+    encoding: str, default 'utf-8'
+        The encoding of the text file.
+    """
     dict_ = textgrid_obj.to_dict()
-    template_name = 'short_format.TextGrid.jinja'if short_format else 'long_format.TextGrid.jinja'
+
+    template_name = 'long_format.TextGrid.jinja'
     template = env.get_template(template_name)
     textgrid_str = template.render(textgrid = dict_)
 
     with open(dst_path, 'w', encoding = encoding) as textfile:
         textfile.write(textgrid_str)
 
-def to_csv(textgrid_obj, path, encoding = 'utf-8'):
+def write_short(textgrid_obj, dst_path, encoding = 'utf-8'):
+    """
+    Write a TextGrid object to a text file in short-format.
+
+    Parameters
+    ----------
+    textgrid_obj :
+        A TextGrid object.
+    dst_path : str or :class:`pathlib.Path`
+        The path where the text file will be stored.
+    encoding: str, default 'utf-8'
+        The encoding of the text file.
+    """
+    dict_ = textgrid_obj.to_dict()
+
+    template_name = 'short_format.TextGrid.jinja'
+    template = env.get_template(template_name)
+    textgrid_str = template.render(textgrid = dict_)
+
+    with open(dst_path, 'w', encoding = encoding) as textfile:
+        textfile.write(textgrid_str)
+
+def write_binary(textgrid_obj):
+    pass
+
+def write_csv(textgrid_obj, path, encoding = 'utf-8'):
     """
     Write TextGrid to a csv file.
 
@@ -77,7 +124,7 @@ def to_csv(textgrid_obj, path, encoding = 'utf-8'):
         for row in table:
             spamwriter.writerow([str(item) for item in row])
 
-def textgrid_to_json(textgrid_obj, path, encoding = 'utf-8'):
+def write_json(textgrid_obj, filepath, encoding = 'utf-8'):
     """
     Write TextGrid to a json file.
 
@@ -85,13 +132,13 @@ def textgrid_to_json(textgrid_obj, path, encoding = 'utf-8'):
     ----------
     textgrid_obj : TextGrid
         Data stored in a TextGrid.
-    path : str
+    filepath: str
         The path where the delimited text file will be created.
     encoding : str, default utf-8
         The encoding of the resulting file.
     """
     dict_ = textgrid_obj.to_dict()
-    with open(path, 'w', encoding = encoding) as file_object:
+    with open(filepath, 'w', encoding = encoding) as file_object:
         json.dump(dict_, file_object, cls = _DecimalEncoder, ensure_ascii = False, indent = 4)
 
 class _DecimalEncoder(json.JSONEncoder):
