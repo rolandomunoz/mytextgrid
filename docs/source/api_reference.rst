@@ -17,6 +17,7 @@ TextGrid
 ~~~~~~~~
 .. autoclass:: mytextgrid.io.textgrid.TextGrid
    :members:
+   :inherited-members:
 
 IntervalTier
 ~~~~~~~~~~~~

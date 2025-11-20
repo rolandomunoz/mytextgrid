@@ -33,7 +33,7 @@ A TextGrid is hierarchical structured. It contains one or more tiers, which at t
 Reading a TextGrid file
 -----------------------
 
-To read a TextGrid file you can use the function ``mytextgrid.read_from_file()``.
+To read a TextGrid file you can use the function ``mytextgrid.read_textgrid()``.
 This returns a ``TextGrid`` object.
 
 .. code-block:: python
@@ -41,9 +41,9 @@ This returns a ``TextGrid`` object.
    >>> import mytextgrid
 
    >>> path = r'C:\Users\rolan\Documents\projects\sentence1.TextGrid'
-   >>> tg = mytextgrid.read_from_file(path)
+   >>> tg = mytextgrid.read_textgrid(path)
 
-You can also use ``mytextgrid.read_from_stream()`` which accepts a `str` or
+You can also use ``mytextgrid.read_textgrid_from_stream()`` which accepts a `str` or
 file-like object.
 
 .. code-block:: python
@@ -53,11 +53,11 @@ file-like object.
    >>> path = r'C:\Users\rolan\Documents\projects\sentence1.TextGrid'
 
    >>> with open(textgrid_path, encoding = 'utf-8') as textfile:
-   >>>      tg = mytextgrid.read_from_stream(textfile)
+   >>>      tg = mytextgrid.read_textgrid_from_stream(textfile)
 
    >>> with open(textgrid_path, encoding = 'utf-8') as textfile:
    >>>      text = textfile.read()
-   >>>      tg = mytextgrid.read_from_stream(text)
+   >>>      tg = mytextgrid.read_textgrid_from_stream(text)
 
 .. warning::
 
