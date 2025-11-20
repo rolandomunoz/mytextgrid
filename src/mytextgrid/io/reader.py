@@ -25,7 +25,7 @@ def read_long(filepath, encoding = None):
     textgrid_obj = long.dict_to_textgrid(textgrid_dict)
     return textgrid_obj
 
-def read_from_stream(*args, **kwds):
+def read_textgrid_from_stream(*args, **kwds):
     """
     Read a stream into a TextGrid object.
 
