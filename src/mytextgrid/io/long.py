@@ -1,10 +1,12 @@
 """Parse TextGrid files in full text format into TextGrid objects"""
-import decimal
 import re
+import decimal
 from io import StringIO
 from pathlib import Path
+
 import chardet
-from mytextgrid.core.textgrid import TextGrid
+
+from mytextgrid.io.textgrid import TextGrid
 decimal.getcontext().prec = 16
 
 def parse_textgrid_file(path, encoding = None):
