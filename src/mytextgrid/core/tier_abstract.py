@@ -1,11 +1,11 @@
 """Create and manipulate tier objects"""
 import decimal
 
-from mytextgrid.eval import obj_to_decimal
+from mytextgrid.utils import obj_to_decimal
 
 decimal.getcontext().prec = 16
 
-class Tier:
+class TierAbstract:
     """
     This is a base class for :class:`IntervalTier` and
     :class:`PointTier classes`. It represents an item's container.
