@@ -1,6 +1,10 @@
-from mytextgrid.io.parser import fulltext_format
+from mytextgrid.io import long
 
-def read_from_file(path, encoding = None):
+def read_textgrid(filepath, format_ = 'long', encoding = None):
+    if format_ == 'long':
+        return read_long(filepath, encoding)
+
+def read_long(filepath, encoding = None):
     """
     Read a TextGrid file with full text format and return a TextGrid object.
 
@@ -17,8 +21,8 @@ def read_from_file(path, encoding = None):
         :class:`mytextgrid.TextGrid`
             A TextGrid instance.
     """
-    textgrid_dict = fulltext_format.parse_textgrid_file(path, encoding)
-    textgrid_obj = fulltext_format.dict_to_textgrid(textgrid_dict)
+    textgrid_dict = long.parse_textgrid_file(filepath, encoding)
+    textgrid_obj = long.dict_to_textgrid(textgrid_dict)
     return textgrid_obj
 
 def read_from_stream(*args, **kwds):
@@ -40,6 +44,6 @@ def read_from_stream(*args, **kwds):
             A TextGrid instance.
             A TextGrid instance.
     """
-    textgrid_dict = fulltext_format.parse(*args, **kwds)
-    textgrid_obj = fulltext_format.dict_to_textgrid(textgrid_dict)
+    textgrid_dict = long.parse(*args, **kwds)
+    textgrid_obj = long.dict_to_textgrid(textgrid_dict)
     return textgrid_obj
