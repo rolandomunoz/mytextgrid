@@ -1,6 +1,24 @@
 from mytextgrid.io import long
 
 def read_textgrid(filepath, format_ = 'long', encoding = None):
+    """
+    Read a TextGrid file and return a TextGrid object.
+
+    Parameters
+    ----------
+    path : str
+        The path of the TextGrid file.
+    format_ : {'long'}
+        The TextGrid format.
+    encoding : str, default None, detect automatically the encoding.
+        The name of the encoding used to decode the file. See the codecs module for the list
+        supported encodings.
+
+    Returns
+    -------
+        :class:`mytextgrid.io.textgrid.TextGrid`
+            A TextGrid instance.
+    """
     if format_ == 'long':
         return read_long(filepath, encoding)
 
@@ -18,7 +36,7 @@ def read_long(filepath, encoding = None):
 
     Returns
     -------
-        :class:`mytextgrid.TextGrid`
+        :class:`mytextgrid.io.textgrid.TextGrid`
             A TextGrid instance.
     """
     textgrid_dict = long.parse_textgrid_file(filepath, encoding)
@@ -40,8 +58,7 @@ def read_textgrid_from_stream(*args, **kwds):
 
     Returns
     -------
-        :class:`mytextgrid.TextGrid`
-            A TextGrid instance.
+        :class:`mytextgrid.io.textgrid.TextGrid`
             A TextGrid instance.
     """
     textgrid_dict = long.parse(*args, **kwds)

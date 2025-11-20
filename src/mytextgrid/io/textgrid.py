@@ -17,13 +17,15 @@ def create_textgrid(xmin = 0, xmax = 1):
 
     Returns
     -------
-        :class:`mytextgrid.TextGrid`
+        :class:`mytextgrid.io.textgrid.TextGrid`
             A TextGrid instance.
     """
     return TextGrid(xmin, xmax)
 
 class TextGrid(TextGridAbstract):
-
+    """
+    A class representation for a TextGrid.
+    """
     def write(self, path, format_ = 'long', encoding = 'utf-8'):
         """
         Write a TextGrid object as a text file.
