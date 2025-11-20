@@ -5,11 +5,11 @@ from copy import copy
 from decimal import Decimal
 from decimal import getcontext
 
-mytextgrid_path = str(Path(__file__).parent.parent.joinpath('src'))
-sys.path.insert(0, mytextgrid_path)
+src_dir = Path(__file__).parent.parent.joinpath('src')
+sys.path.insert(0, str(src_dir))
+
 from mytextgrid import create_textgrid
-from mytextgrid import read_from_file
-from mytextgrid.io.textgrid_out import textgrid_to_json
+from mytextgrid import read_textgrid
 
 getcontext().prec = 16
 
@@ -51,7 +51,7 @@ class TestTextGrid(unittest.TestCase):
         self.assertEqual(len(self.textgrid.get_tier_by_name('word')), 3)
 
         path_in = Path(__file__).parent / 'files' / 'empty_tier.TextGrid'
-        textgrid_new = read_from_file(path_in)
+        textgrid_new = read_textgrid(path_in)
 
         self.assertEqual(textgrid_new[0].name, '')
         self.assertEqual(textgrid_new[1].name, ' luis')
@@ -74,7 +74,7 @@ class TestTextGrid(unittest.TestCase):
             path_out = files_dir.joinpath(name).with_suffix('.TextGrid.out')
             json_out = files_dir.joinpath(name).with_suffix('.TextGrid.json')
 
-            textgrid_new = read_from_file(path_in)
+            textgrid_new = read_textgrid(path_in)
             textgrid_new.write(path_out)
             textgrid_new.write_as_json(json_out)
 

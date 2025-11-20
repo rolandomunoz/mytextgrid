@@ -8,15 +8,15 @@ import mytextgrid
 textgrid_path = Path(__file__).parent / 'files/Mary_John_bell-1.TextGrid'
 
 with open(textgrid_path, encoding = 'utf-8') as textfile:
-    tg = mytextgrid.read_from_stream(textfile)
+    tg = mytextgrid.read_textgrid_from_stream(textfile)
 
 with open(textgrid_path, encoding = 'utf-8') as textfile:
     text = textfile.read()
-    tg = mytextgrid.read_from_stream(text)
+    tg = mytextgrid.read_textgrid_from_stream(text)
 
     print(tg.describe())
 
-tg = mytextgrid.read_from_file(textgrid_path)
+tg = mytextgrid.read_textgrid(textgrid_path)
 
 # Describe a TextGrid
 tg.describe()
