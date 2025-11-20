@@ -3,34 +3,13 @@ Create and manipulate TextGrid objects.
 """
 import decimal
 
-from mytextgrid.io import textgrid_out
 from mytextgrid.core.interval_tier import IntervalTier
 from mytextgrid.core.point_tier import PointTier
-from mytextgrid.eval import obj_to_decimal
+from mytextgrid.utils import obj_to_decimal
 
 decimal.getcontext().prec = 16
 
-def create_textgrid(xmin = 0, xmax = 1):
-    """
-    Create and return an empty TextGrid.
-
-    An empty TextGrid does not contain any tier.
-
-    Parameters
-    ----------
-    xmin : int, float, str or :class:`decimal.Decimal`, default 0
-        The starting time of the TextGrid.
-    xmax : int, float, str or :class:`decimal.Decimal`, default 1
-        The ending time of the TextGrid.
-
-    Returns
-    -------
-        :class:`mytextgrid.TextGrid`
-            A TextGrid instance.
-    """
-    return TextGrid(xmin, xmax)
-
-class TextGrid:
+class TextGridAbstract:
     """
     A class representation for a TextGrid.
     """
@@ -272,31 +251,3 @@ class TextGrid:
             'tiers': tiers_list
         }
         return textgrid_dict
-
-    def write(self, path, short_format = False, encoding = 'utf-8'):
-        """
-        Write a TextGrid object as a text file.
-
-        Parameters
-        ----------
-        path : str or :class:`pathlib.Path`
-            The path where the TextGrid file will be written.
-        short_format : bool, default False
-            ``True`` to output TextGrid file in long format. ``False`` for short format.
-        encoding : str, default 'utf-8'
-            The encoding of the file.
-        """
-        textgrid_out.textgrid_to_text_file(self, path, short_format, encoding)
-
-    def write_as_json(self, *args, **kwds):
-        """
-        Write a TextGrid object as a JSON file.
-
-        Parameters
-        ----------
-        path : str or :class:`pathlib.Path`
-            The path where the JSON file will be written.
-        encoding : str, default utf-8
-            The encoding of the resulting file.
-        """
-        textgrid_out.textgrid_to_json(self, *args, **kwds)
