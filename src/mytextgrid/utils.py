@@ -26,3 +26,6 @@ def obj_to_decimal(time, message = None):
     else:
         message = 'time parameter must be int, float, str or decimal.Decimal'
         raise TypeError(message)
+
+def is_textgrid_file(filepath, encoding=''):
+    return True
