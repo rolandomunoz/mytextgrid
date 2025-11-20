@@ -1,4 +1,4 @@
-from mytextgrid.core.textgrid import TextGridAbstract
+from mytextgrid.core.textgrid_abstract import TextGridAbstract
 from mytextgrid.io.writer import write_json
 from mytextgrid.io.writer import write_textgrid
 
