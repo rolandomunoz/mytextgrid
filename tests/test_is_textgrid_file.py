@@ -11,7 +11,7 @@ class Testpoint(unittest.TestCase):
     Test Point object methods.
     """
     def setUp(self):
-        self.src_dir = Path(__file__).parent / 'file_encodings'
+        self.src_dir = Path(__file__).parent / 'files/encodings'
         self.fnames = [
             ("empty_file", False),
             ("text-ISO_Latin_1-BIN.TextGrid", True),
