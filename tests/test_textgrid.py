@@ -83,7 +83,7 @@ class TestTextGrid(unittest.TestCase):
 
             a = calculate_sha256(path_in)
             b = calculate_sha256(path_out)
-            print(a == b)
+
 
         tg = create_textgrid(0, 10)
         tg.write(output_dir / 'empty.TextGrid')
