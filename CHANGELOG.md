@@ -12,6 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Read TextGrid file in short format
 - Read TextGrid file in binary
 
+### Changed
+
+- The **LICENSE** has been changed from **GPL** to **MIT**.
+
+## [0.10.0] - 2025-11-23
+
+## Added
+
+- `is_textgrid_file()` now verifies if a file is in the TextGrid format (supports binary, short, and long formats).
+
 ### Fixed
 
 - IntervalTier.move_boundary() and IntervalTier.inset_boundary() work again
@@ -19,10 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Modified
 
 - Rename function `read_from_stream` to `read_textgrid_from_stream`
-
-### Changed
-
-- The **LICENSE** has been changed from **GPL** to **MIT**.
 
 ## [0.9.0] - 2025-11-17
 
