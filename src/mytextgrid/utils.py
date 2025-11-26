@@ -1,8 +1,6 @@
 import decimal
 decimal.getcontext().prec = 16
 
-import chardet
-
 def obj_to_decimal(time, message = None):
     """
     Convert a number to :class:`decimal.Decimal`.
@@ -28,6 +26,29 @@ def obj_to_decimal(time, message = None):
     else:
         message = 'time parameter must be int, float, str or decimal.Decimal'
         raise TypeError(message)
+
+def detect_encoding(byte_data):
+    """
+    Detect the encoding given a binary data.
+
+    Praat encodes text files using UTF-8, UTF-16 with BOM, ISO 8859-1,
+    Windows-1252 and Mac OS Roman.
+    """
+    encodings = [
+        'utf-8',
+        'utf-16le',
+        'utf-16be',
+        'windows-1252',
+        'mac_roman',
+        'iso-8859-1',
+    ]
+    for encoding in encodings:
+        try:
+            byte_data.decode(encoding)
+            return encoding
+        except UnicodeDecodeError:
+            continue
+    return ''
 
 def is_textgrid_file(filepath):
     """
