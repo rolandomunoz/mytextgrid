@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Read TextGrid file in short format
 - Read TextGrid file in binary
 
+### Refactor
+- Refactor: Replace header detection stream parser with bytes.startswith()
+
 ### Changed
 
 - The **LICENSE** has been changed from **GPL** to **MIT**.
