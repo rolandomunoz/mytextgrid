@@ -1,6 +1,60 @@
 import decimal
 decimal.getcontext().prec = 16
 
+_BINARY_MARK = b'ooBinaryFile\x08TextGrid'
+
+_UTF8_LF_MARK = b'File type = "ooTextFile"\nObject class = "TextGrid"\n'
+_UTF8_CR_MARK = b'File type = "ooTextFile"\rObject class = "TextGrid"\r'
+_UTF8_CRLF_MARK = b'File type = "ooTextFile"\r\nObject class = "TextGrid"\r\n'
+
+_UTF16BE_CR_MARK = (b'\xfe\xff\x00F\x00i\x00l\x00e\x00 \x00t'
+                    b'\x00y\x00p\x00e\x00 \x00=\x00 \x00"\x00o'
+                    b'\x00o\x00T\x00e\x00x\x00t\x00F\x00i\x00l'
+                    b'\x00e\x00"\x00\r\x00O\x00b\x00j\x00e\x00c'
+                    b'\x00t\x00 \x00c\x00l\x00a\x00s\x00s\x00 '
+                    b'\x00=\x00 \x00"\x00T\x00e\x00x\x00t\x00G'
+                    b'\x00r\x00i\x00d\x00"\x00\r\x00\r')
+
+_UTF16BE_LF_MARK = (b'\xfe\xff\x00F\x00i\x00l\x00e\x00 \x00t\x00y\x00p'
+                    b'\x00e\x00 \x00=\x00 \x00"\x00o\x00o\x00T\x00e\x00'
+                    b'x\x00t\x00F\x00i\x00l\x00e\x00"\x00\n\x00O\x00b'
+                    b'\x00j\x00e\x00c\x00t\x00 \x00c\x00l\x00a\x00s'
+                    b'\x00s\x00 \x00=\x00 \x00"\x00T\x00e\x00x\x00t'
+                    b'\x00G\x00r\x00i\x00d\x00"\x00\n\x00\n')
+
+_UTF16BE_CRLF_MARK = (b'\xfe\xff\x00F\x00i\x00l\x00e\x00 \x00t'
+                      b'\x00y\x00p\x00e\x00 \x00=\x00 \x00"'
+                      b'\x00o\x00o\x00T\x00e\x00x\x00t\x00F'
+                      b'\x00i\x00l\x00e\x00"\x00\r\x00\n\x00O'
+                      b'\x00b\x00j\x00e\x00c\x00t\x00 \x00c'
+                      b'\x00l\x00a\x00s\x00s\x00 \x00=\x00 \x00"'
+                      b'\x00T\x00e\x00x\x00t\x00G\x00r\x00i\x00d'
+                      b'\x00"\x00\r\x00\n\x00\r\x00\n')
+
+_UTF16LE_LF_MARK = (b'\xff\xfeF\x00i\x00l\x00e\x00 \x00t\x00y\x00p'
+                    b'\x00e\x00 \x00=\x00 \x00"\x00o\x00o\x00T\x00'
+                    b'e\x00x\x00t\x00F\x00i\x00l\x00e\x00"\x00\n'
+                    b'\x00O\x00b\x00j\x00e\x00c\x00t\x00 \x00c\x00l'
+                    b'\x00a\x00s\x00s\x00 \x00=\x00 \x00"\x00T\x00e'
+                    b'\x00x\x00t\x00G\x00r\x00i\x00d\x00"\x00\n\x00'
+                    b'\n\x00')
+
+_UTF16LE_CR_MARK = (b'\xff\xfeF\x00i\x00l\x00e\x00 \x00t\x00y\x00p'
+                    b'\x00e\x00 \x00=\x00 \x00"\x00o\x00o\x00T\x00'
+                    b'e\x00x\x00t\x00F\x00i\x00l\x00e\x00"\x00\r'
+                    b'\x00O\x00b\x00j\x00e\x00c\x00t\x00 \x00c'
+                    b'\x00l\x00a\x00s\x00s\x00 \x00=\x00 \x00"\x00T'
+                    b'\x00e\x00x\x00t\x00G\x00r\x00i\x00d\x00"\x00'
+                    b'\r\x00\r\x00')
+
+_UTF16LE_CRLF_MARK = (b'\xff\xfeF\x00i\x00l\x00e\x00 \x00t\x00y\x00'
+                      b'p\x00e\x00 \x00=\x00 \x00"\x00o\x00o\x00T\x00'
+                      b'e\x00x\x00t\x00F\x00i\x00l\x00e\x00"\x00\r\x00'
+                      b'\n\x00O\x00b\x00j\x00e\x00c\x00t\x00 \x00c\x00l'
+                      b'\x00a\x00s\x00s\x00 \x00=\x00 \x00"\x00T\x00e'
+                      b'\x00x\x00t\x00G\x00r\x00i\x00d\x00"\x00\r\x00'
+                      b'\n\x00\r\x00\n\x00')
+
 def obj_to_decimal(time, message = None):
     """
     Convert a number to :class:`decimal.Decimal`.
@@ -56,8 +110,7 @@ def is_textgrid_file(filepath):
 
     The function checks the initial bytes of the file for the required
     header signature, supporting both binary and text formats, and handling
-    various encodings and end-of-line (EOL) conventions. It performs a minimal
-    read operation to verify the header, ensuring efficiency.
+    various encodings and end-of-line (EOL) conventions.
 
     Parameters
     ----------
@@ -79,68 +132,16 @@ def is_textgrid_file(filepath):
     * **EOL Conventions Handled:** LF, CRLF, and CR.
     * **Formats Checked:** Binary (ooBinaryFile) and Text (ooTextFile, Long/Short).
     """
-    BOM_LE = b'\xff\xfe' # LE
-    BOM_BE = b'\xfe\xff' # BE
-    CR = b'\x0d'
-    LF = b'\x0a'
-    LF_UTF16_LE = b'\x0a\x00'
-    CR_UTF16_LE = b'\x0d\x00'
-    LF_UTF16_BE = b'\x00\x0a'
-    CR_UTF16_BE = b'\x00\x0d'
-    TEXTGRID_BINARY_MARK = b'ooBinaryFile\x08TextGrid'
-    TEXTGRID_UTF8_MARK = 'File type = "ooTextFile"\nObject class = "TextGrid"\n'
-
-    byte_stream = b''
-    line_counter = 0
-    byte_window = 1
-    encoding = 'utf-8'
-    max_header_size = 51
-
-    # Read the first two lines of a TextGrid file
+    header_list = [
+        _BINARY_MARK,
+        _UTF8_CRLF_MARK, _UTF8_CR_MARK, _UTF8_LF_MARK,
+        _UTF16BE_LF_MARK, _UTF16BE_CR_MARK, _UTF16BE_CRLF_MARK,
+        _UTF16LE_LF_MARK, _UTF16LE_CR_MARK, _UTF16LE_CRLF_MARK
+    ]
     with open(filepath, 'rb') as f:
-        current_position = f.tell()
-        boom_mark = f.read(2)
-        if boom_mark == BOM_LE:
-            current_position = 2
-            byte_window = 2
-            LF, CR = LF_UTF16_LE, CR_UTF16_LE
-            encoding = 'utf-16le'
-            max_header_size = 102
-        elif boom_mark == BOM_BE:
-            current_position = 2
-            byte_window = 2
-            LF, CR = LF_UTF16_BE, CR_UTF16_BE
-            encoding = 'utf-16be'
-            max_header_size = 102
-        else:
-            # Read the first 21 bytes to look for the TEXTGRID_BYTE_MARK
-            textgrid_binary_mark = boom_mark + f.read(19)
-            if textgrid_binary_mark == TEXTGRID_BINARY_MARK:
-                return True
+        chunk = f.read(4096)
 
-        f.seek(current_position)
-        while len(byte_stream) < max_header_size:
-            byte = f.read(byte_window)
-            if not byte:
-                break
-
-            if byte == LF: # Mordern MAC and LINUX
-                line_counter += 1
-            elif byte == CR: #CR
-                next_byte = f.read(byte_window)
-                if next_byte == LF: # CRLF (Windows)
-                    byte = LF
-                else: # CR (Classic MAC)
-                    byte = LF
-                    f.seek(f.tell() - byte_window)
-                line_counter += 1
-
-            if line_counter > 2:
-                break
-
-            byte_stream = byte_stream + byte
-
-    textgrid_utf8_mark = byte_stream.decode(encoding)
-    if textgrid_utf8_mark == TEXTGRID_UTF8_MARK:
-        return True
+    for header in header_list:
+        if chunk.startswith(header):
+            return True
     return False
