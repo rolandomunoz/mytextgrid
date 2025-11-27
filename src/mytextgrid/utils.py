@@ -55,6 +55,14 @@ _UTF16LE_CRLF_MARK = (b'\xff\xfeF\x00i\x00l\x00e\x00 \x00t\x00y\x00'
                       b'\x00x\x00t\x00G\x00r\x00i\x00d\x00"\x00\r\x00'
                       b'\n\x00\r\x00\n\x00')
 
+_TEXTGRID_HEADERS = [
+    _UTF8_CRLF_MARK, _UTF8_CR_MARK, _UTF8_LF_MARK,
+    _UTF16BE_LF_MARK, _UTF16BE_CR_MARK, _UTF16BE_CRLF_MARK,
+    _UTF16LE_LF_MARK, _UTF16LE_CR_MARK, _UTF16LE_CRLF_MARK
+]
+
+_ALL_TEXTGRID_HEADERS = _TEXTGRID_HEADERS + [_BINARY_MARK]
+
 def obj_to_decimal(time, message=None):
     """
     Convert a number to :class:`decimal.Decimal`.
@@ -104,7 +112,7 @@ def detect_encoding(byte_data):
             continue
     return ''
 
-def is_textgrid_file(filepath):
+def is_textgrid_file(filepath, include_binary=False):
     """
     Validates if a file is a recognized Praat TextGrid file format.
 
@@ -116,6 +124,8 @@ def is_textgrid_file(filepath):
     ----------
     filepath : str
         The path to the file to be validated.
+    include_binary : bool
+        Check the header in binary files.
 
     Returns
     -------
@@ -132,16 +142,15 @@ def is_textgrid_file(filepath):
     * **EOL Conventions Handled:** LF, CRLF, and CR.
     * **Formats Checked:** Binary (ooBinaryFile) and Text (ooTextFile, Long/Short).
     """
-    header_list = [
-        _BINARY_MARK,
-        _UTF8_CRLF_MARK, _UTF8_CR_MARK, _UTF8_LF_MARK,
-        _UTF16BE_LF_MARK, _UTF16BE_CR_MARK, _UTF16BE_CRLF_MARK,
-        _UTF16LE_LF_MARK, _UTF16LE_CR_MARK, _UTF16LE_CRLF_MARK
-    ]
+    if include_binary:
+        headers_to_check = _ALL_TEXTGRID_HEADERS
+    else:
+        headers_to_check = _TEXTGRID_HEADERS
+
     with open(filepath, 'rb') as f:
         chunk = f.read(4096)
 
-    for header in header_list:
+    for header in headers_to_check:
         if chunk.startswith(header):
             return True
     return False
