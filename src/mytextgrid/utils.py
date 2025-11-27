@@ -112,7 +112,7 @@ def detect_encoding(byte_data):
             continue
     return ''
 
-def is_textgrid_file(filepath, include_binary=False):
+def is_textgrid_file(filepath, include_binary=True):
     """
     Validates if a file is a recognized Praat TextGrid file format.
 
