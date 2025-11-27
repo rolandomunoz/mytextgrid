@@ -55,7 +55,7 @@ _UTF16LE_CRLF_MARK = (b'\xff\xfeF\x00i\x00l\x00e\x00 \x00t\x00y\x00'
                       b'\x00x\x00t\x00G\x00r\x00i\x00d\x00"\x00\r\x00'
                       b'\n\x00\r\x00\n\x00')
 
-def obj_to_decimal(time, message = None):
+def obj_to_decimal(time, message=None):
     """
     Convert a number to :class:`decimal.Decimal`.
 
