@@ -63,6 +63,18 @@ _TEXTGRID_HEADERS = [
 
 _ALL_TEXTGRID_HEADERS = _TEXTGRID_HEADERS + [_BINARY_MARK]
 
+_BOOM_MARK_DICT = {
+    b'\xfe\xff': 'utf-16be', # Big endian
+    b'\xff\xfe': 'utf-16le', # Little endian
+}
+
+_TEXTGRID_ENCODINGS = [
+    'utf-8',
+    'windows-1252',
+    'mac_roman',
+    'iso-8859-1',
+]
+
 def obj_to_decimal(time, message=None):
     """
     Convert a number to :class:`decimal.Decimal`.
@@ -89,24 +101,44 @@ def obj_to_decimal(time, message=None):
         message = 'time parameter must be int, float, str or decimal.Decimal'
         raise TypeError(message)
 
-def detect_encoding(byte_data):
+def detect_textgrid_encoding(fpath):
     """
-    Detect the encoding given a binary data.
+    Detects the encoding of a Praat TextGrid file.
 
-    Praat encodes text files using UTF-8, UTF-16 with BOM, ISO 8859-1,
-    Windows-1252 and Mac OS Roman.
+    This function determines the file's text encoding. The decoding
+    attempts are performed in the following strict order:
+
+        - UTF-16 with BOM
+        - UTF-8 without BOM
+        - Windows-1252
+        - Mac OS Roman
+        - ISO 8859-1 (used as a final fallback)
+
+    Parameters
+    ----------
+    fpath : str
+        The file path to the TextGrid file to be evaluated.
+
+    Returns
+    -------
+    str
+        The detected encoding string: one of {'utf-16be', 'utf-16le',
+        'utf-8', 'windows-1252', 'mac_roman', 'iso-8859-1'}. Returns an
+         empty string ('') if a valid encoding cannot be detected.
     """
-    encodings = [
-        'utf-8',
-        'utf-16le',
-        'utf-16be',
-        'windows-1252',
-        'mac_roman',
-        'iso-8859-1',
-    ]
-    for encoding in encodings:
+    if not is_textgrid_file(fpath, include_binary=False):
+        return ''
+
+    with open(fpath, 'rb') as f:
+        byte_stream = f.read()
+
+    boom_mark = byte_stream[0:2]
+    if boom_mark in _BOOM_MARK_DICT:
+        return _BOOM_MARK_DICT[boom_mark]
+
+    for encoding in _TEXTGRID_ENCODINGS:
         try:
-            byte_data.decode(encoding)
+            byte_stream.decode(encoding)
             return encoding
         except UnicodeDecodeError:
             continue
