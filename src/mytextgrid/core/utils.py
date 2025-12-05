@@ -1,3 +1,7 @@
+import decimal
+decimal.getcontext().prec = 16
+
+
 def obj_to_decimal(time, message=None):
     """
     Convert a number to :class:`decimal.Decimal`.
