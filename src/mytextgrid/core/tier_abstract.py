@@ -1,7 +1,7 @@
 """Create and manipulate tier objects"""
 import decimal
 
-from mytextgrid.utils import obj_to_decimal
+from mytextgrid.core.utils import obj_to_decimal
 
 decimal.getcontext().prec = 16
 

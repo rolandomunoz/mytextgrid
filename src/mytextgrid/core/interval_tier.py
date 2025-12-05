@@ -2,7 +2,7 @@
 import decimal
 
 from mytextgrid.core.tier_abstract import TierAbstract
-from mytextgrid.utils import obj_to_decimal
+from mytextgrid.core.utils import obj_to_decimal
 
 decimal.getcontext().prec = 16
 

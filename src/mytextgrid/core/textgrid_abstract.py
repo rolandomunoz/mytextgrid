@@ -5,7 +5,7 @@ import decimal
 
 from mytextgrid.core.interval_tier import IntervalTier
 from mytextgrid.core.point_tier import PointTier
-from mytextgrid.utils import obj_to_decimal
+from mytextgrid.core.utils import obj_to_decimal
 
 decimal.getcontext().prec = 16
 
