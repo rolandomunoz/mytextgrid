@@ -4,7 +4,7 @@ from pathlib import Path
 
 pkg_dir = Path(__file__).parent.parent / 'src'
 sys.path.insert(0, str(pkg_dir))
-from mytextgrid import utils
+from mytextgrid.io import utils
 
 class TestIsTextGrid(unittest.TestCase):
     """
